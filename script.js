@@ -32,14 +32,14 @@ function playConfetti() {
 }
 console.log("✅ Firebase Ready");
 // 監聽手機是否要求擲骰
+let lastRollTimestamp = 0;
 onValue(ref(db, "remote/roll"), (snapshot) => {
 
-    if (snapshot.val() === true) {
-
-        console.log("📱 手機要求擲骰");
-
+    const val = snapshot.val();
+    if (typeof val === "number" && val > lastRollTimestamp) {
+        lastRollTimestamp = val;
+        console.log("📱 手機要求擲骰:", val);
         document.getElementById("rollBtn").click();
-
     }
 
 });

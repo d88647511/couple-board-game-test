@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "remote": {
+      ".read": true,
+      ".write": true
+    },
+    "host": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

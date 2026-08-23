@@ -29,6 +29,24 @@ button{
     color:white;
 }
 
+@keyframes bounce {
+    0%   { transform: scale(1); }
+    15%  { transform: scale(1.12); }
+    30%  { transform: scale(0.92); }
+    45%  { transform: scale(1.06); }
+    60%  { transform: scale(0.96); }
+    75%  { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+button.bounce {
+    animation: bounce 350ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button.bounce { animation: none; }
+}
+
 </style>
 
 </head>
@@ -56,17 +74,46 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playClickSound() {
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "square";
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.08);
+}
+
 document.getElementById("rollBtn").onclick = async () => {
 
     console.log("按鈕被按了");
 
-    await set(ref(db, "remote/roll"), true);
+    const btn = document.getElementById("rollBtn");
 
-    console.log("已寫入 true");
+    btn.classList.add("bounce");
+    btn.addEventListener("animationend", () => btn.classList.remove("bounce"), { once: true });
 
-    await set(ref(db, "remote/roll"), false);
+    btn.style.background = "#ff99bb";
+    setTimeout(() => btn.style.background = "", 100);
 
-    console.log("已寫入 false");
+    playClickSound();
+
+    if (navigator.vibrate) {
+        const ok = navigator.vibrate(200);
+        console.log("震動觸發:", ok);
+    } else {
+        console.log("此裝置不支援 navigator.vibrate");
+    }
+
+    const timestamp = Date.now();
+    await set(ref(db, "remote/roll"), timestamp);
+
+    console.log("已寫入 timestamp:", timestamp);
 
 };
 
