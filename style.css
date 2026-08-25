@@ -259,6 +259,44 @@ position:relative;
 }
 
 /* =========================
+   棋盤背景花草裝飾
+========================= */
+
+#decoLayer{
+
+    position:absolute;
+
+    left:0;
+
+    top:0;
+
+    width:2400px;
+
+    height:1650px;
+
+    pointer-events:none;
+
+    z-index:0;
+
+}
+
+.deco{
+
+    position:absolute;
+
+    opacity:.32;
+
+    filter:saturate(.75);
+
+    user-select:none;
+
+    -webkit-user-select:none;
+
+    line-height:1;
+
+}
+
+/* =========================
    道路 SVG
 ========================= */
 
