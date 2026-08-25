@@ -68,6 +68,10 @@ background-size:
 
 height:64px;
 
+min-height:64px;
+
+overflow:hidden;
+
 flex-shrink:0;
 
 display:flex;
@@ -76,7 +80,7 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:8px 24px;
+padding:6px 24px;
 
 background:rgba(255,255,255,.65);
 
@@ -102,6 +106,8 @@ color:#d94f8c;
 
 letter-spacing:2px;
 
+line-height:1.2;
+
 }
 
 .subtitle{
@@ -113,6 +119,8 @@ color:#888;
 font-size:12px;
 
 font-weight:600;
+
+line-height:1.2;
 
 }
 
@@ -170,6 +178,8 @@ height:calc(100vh - 64px);
 
 flex:1;
 
+min-width:0;
+
 display:flex;
 
 justify-content:center;
@@ -186,6 +196,10 @@ position:relative;
     position:relative;
 
     width:1450px;
+
+    max-width:none;
+
+    min-width:0;
 
     height:980px;
 
