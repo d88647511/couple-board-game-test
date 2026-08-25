@@ -31,19 +31,25 @@ body{
     line-height:1;
     user-select:none;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    transition: transform 50ms;
 }
 
-.dice-icon.bounce {
-    animation: diceBounce 300ms ease-out;
+.dice-icon.rolling {
+    animation: diceRoll 700ms ease-out forwards;
 }
 
-@keyframes diceBounce {
-    0%   { transform: scale(1); }
-    20%  { transform: scale(0.7); }
-    40%  { transform: scale(1.2); }
-    60%  { transform: scale(0.9); }
-    80%  { transform: scale(1.1); }
-    100% { transform: scale(1); }
+@keyframes diceRoll {
+    0%   { transform: scale(1) rotate(0deg); }
+    10%  { transform: scale(0.8) rotate(-15deg); }
+    20%  { transform: scale(1.1) rotate(10deg); }
+    30%  { transform: scale(0.9) rotate(-8deg); }
+    40%  { transform: scale(1.15) rotate(5deg); }
+    50%  { transform: scale(0.95) rotate(-3deg); }
+    60%  { transform: scale(1.1) rotate(2deg); }
+    70%  { transform: scale(1.0) rotate(-1deg); }
+    80%  { transform: scale(1.05) rotate(0deg); }
+    90%  { transform: scale(1.0) rotate(0deg); }
+    100% { transform: scale(1) rotate(0deg); }
 }
 
 .dice-label {
@@ -82,7 +88,7 @@ button:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .dice-icon.bounce { animation: none; }
+    .dice-icon.rolling { animation: none; }
 }
 
 </style>
@@ -137,8 +143,17 @@ function playDiceSound() {
 }
 
 function triggerDiceAnimation() {
-    diceIcon.classList.add("bounce");
-    diceIcon.addEventListener("animationend", () => diceIcon.classList.remove("bounce"), { once: true });
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+        diceIcon.textContent = Math.floor(Math.random() * 6) + 1;
+        rollCount++;
+        if (rollCount >= 10) {
+            clearInterval(rollInterval);
+            diceIcon.textContent = "🎲";
+            diceIcon.classList.add("rolling");
+            diceIcon.addEventListener("animationend", () => diceIcon.classList.remove("rolling"), { once: true });
+        }
+    }, 70);
 }
 
 async function sendRollCommand() {
