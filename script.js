@@ -37,7 +37,7 @@ let isFirstRollLoad = true;
 onValue(ref(db, "remote/roll"), (snapshot) => {
 
     const val = snapshot.val();
-    if (isFirstLoad) {
+    if (isFirstRollLoad) {
         // 忽略首次載入的現有值，避免自動觸發擲骰
         if (typeof val === "number") {
             lastRollTimestamp = val;
