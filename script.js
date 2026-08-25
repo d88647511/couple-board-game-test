@@ -42,7 +42,7 @@ onValue(ref(db, "remote/roll"), (snapshot) => {
         if (typeof val === "number") {
             lastRollTimestamp = val;
         }
-        isFirstLoad = false;
+        isFirstRollLoad = false;
         return;
     }
     if (typeof val === "number" && val > lastRollTimestamp) {
