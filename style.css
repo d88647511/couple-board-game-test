@@ -191,21 +191,54 @@ overflow:hidden;
 position:relative;
 
 }
+#boardViewport{
+
+    position:absolute;
+
+    inset:0;
+
+    overflow:hidden;
+
+    cursor:grab;
+
+    touch-action:none;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+
+}
+
+#boardViewport.dragging{
+
+    cursor:grabbing;
+
+}
+
+#boardViewport.dragging .space:hover{
+
+    transform:none;
+
+}
+
+#boardViewport.intro-animating #boardContainer{
+
+    transition:
+        transform 2.6s cubic-bezier(.45,.05,.25,1);
+
+}
+
 #boardContainer{
 
     position:relative;
 
-    width:1450px;
+    width:2400px;
 
-    max-width:none;
+    height:1650px;
 
-    min-width:0;
+    transform-origin:0 0;
 
-    height:980px;
-
-    transform-origin:center center;
-
-    transition:.3s;
+    will-change:transform;
 
 }
 
@@ -219,9 +252,9 @@ position:relative;
 
     top:0;
 
-    width:1450px;
+    width:2400px;
 
-    height:980px;
+    height:1650px;
 
 }
 
@@ -237,9 +270,9 @@ position:relative;
 
     top:0;
 
-    width:1450px;
+    width:2400px;
 
-    height:980px;
+    height:1650px;
 
     pointer-events:none;
 
@@ -363,9 +396,9 @@ left:0;
 
 top:0;
 
-width:1100px;
+width:2400px;
 
-height:760px;
+height:1650px;
 
 pointer-events:none;
 

@@ -133,53 +133,116 @@ onValue(ref(db, "host/cheer"), (snapshot) => {
 // ===============================
 
 // -------------------------------
-// 地圖資料
+// 地圖資料（大型 S 型蜿蜒地圖）
 // -------------------------------
 
+const BOARD_W = 2400;
+const BOARD_H = 1650;
 
-const spaces = [
+// 沿折線做等距取樣：產生 count 個均勻分布在路徑上的座標
+function samplePath(anchors, count) {
 
-{ icon:"🎨", type:"gift",   x:80,   y:80 },
-{ icon:"😂", type:"fun",    x:280,  y:80 },
-{ icon:"💍", type:"love",   x:480,  y:80 },
-{ icon:"📸", type:"memory", x:680,  y:80 },
-{ icon:"🎁", type:"gift",   x:880,  y:80 },
-{ icon:"💕", type:"love",   x:1080, y:80 },
-{ icon:"⭐", type:"star",   x:1280, y:80 },
+    const pts = [anchors[0]];
 
-{ icon:"😂", type:"fun",    x:1280, y:260 },
+    let total = 0;
 
-{ icon:"💍", type:"love",   x:1080, y:260 },
-{ icon:"📸", type:"memory", x:880,  y:260 },
-{ icon:"🎁", type:"gift",   x:680,  y:260 },
-{ icon:"💕", type:"love",   x:480,  y:260 },
-{ icon:"⭐", type:"star",   x:280,  y:260 },
-{ icon:"😂", type:"fun",    x:80,   y:260 },
+    for (let i = 1; i < anchors.length; i++) {
 
-{ icon:"💍", type:"love",   x:80,   y:440 },
+        total += Math.hypot(
+            anchors[i].x - anchors[i-1].x,
+            anchors[i].y - anchors[i-1].y
+        );
 
-{ icon:"📸", type:"memory", x:280,  y:440 },
-{ icon:"🎁", type:"gift",   x:480,  y:440 },
-{ icon:"💕", type:"love",   x:680,  y:440 },
-{ icon:"⭐", type:"star",   x:880,  y:440 },
-{ icon:"😂", type:"fun",    x:1080, y:440 },
-{ icon:"💍", type:"love",   x:1280, y:440 },
+    }
 
-{ icon:"📸", type:"memory", x:1280, y:620 },
+    const step = total / (count - 1);
 
-{ icon:"🎁", type:"gift",   x:1080, y:620 },
-{ icon:"💕", type:"love",   x:880,  y:620 },
-{ icon:"⭐", type:"star",   x:680,  y:620 },
-{ icon:"😂", type:"fun",    x:480,  y:620 },
-{ icon:"💍", type:"love",   x:280,  y:620 },
-{ icon:"📸", type:"memory", x:80,   y:620 },
+    let acc = 0;
 
-{ icon:"🎁", type:"gift",   x:80,   y:800 },
-{ icon:"💕", type:"love",   x:280,  y:800 },
+    for (let i = 1; i < anchors.length; i++) {
 
-{ icon:"👑", type:"star",   x:480,  y:800 }
+        const a = anchors[i-1];
+
+        const b = anchors[i];
+
+        const len = Math.hypot(b.x-a.x, b.y-a.y);
+
+        while (acc + len >= step * pts.length && pts.length < count) {
+
+            const t = (step * pts.length - acc) / len;
+
+            pts.push({
+                x: a.x + (b.x-a.x)*t,
+                y: a.y + (b.y-a.y)*t
+            });
+
+        }
+
+        acc += len;
+
+    }
+
+    while (pts.length < count) pts.push({...anchors[anchors.length-1]});
+
+    return pts;
+
+}
+
+// S 型蜿蜒路徑錨點（起點左上 → 終點右下）
+const sAnchors = [
+
+    { x: 220,  y: 260  },
+
+    { x: 850,  y: 150  },
+
+    { x: 1550, y: 200  },
+
+    { x: 2120, y: 380  },
+
+    { x: 2260, y: 700  },
+
+    { x: 1980, y: 950  },
+
+    { x: 1350, y: 1030 },
+
+    { x: 700,  y: 980  },
+
+    { x: 330,  y: 1180 },
+
+    { x: 480,  y: 1440 },
+
+    { x: 1150, y: 1540 },
+
+    { x: 1850, y: 1470 },
+
+    { x: 2220, y: 1300 }
 
 ];
+
+const sPoints = samplePath(sAnchors, 31);
+
+// 格子資料：icon/type/順序完全不變，座標改由 S 型路徑產生
+const spaceDefs = [
+    ["🎨","gift"],["😂","fun"],["💍","love"],["📸","memory"],
+    ["🎁","gift"],["💕","love"],["⭐","star"],
+    ["😂","fun"],
+    ["💍","love"],["📸","memory"],["🎁","gift"],["💕","love"],
+    ["⭐","star"],["😂","fun"],
+    ["💍","love"],
+    ["📸","memory"],["🎁","gift"],["💕","love"],["⭐","star"],
+    ["😂","fun"],["💍","love"],
+    ["📸","memory"],
+    ["🎁","gift"],["💕","love"],["⭐","star"],["😂","fun"],
+    ["💍","love"],["📸","memory"],
+    ["🎁","gift"],["💕","love"],
+    ["👑","star"]
+];
+
+const spaces = spaceDefs.map(([icon,type],i)=>({
+    icon, type,
+    x: Math.round(sPoints[i].x - 41),
+    y: Math.round(sPoints[i].y - 41)
+}));
 
 
 // -------------------------------
@@ -277,6 +340,10 @@ const div=document.createElement("div");
 
 div.className="space "+space.type;
 
+if(index===0) div.classList.add("start");
+
+if(index===spaces.length-1) div.classList.add("goal");
+
 div.dataset.index=index;
 
 div.style.left=space.x+"px";
@@ -292,31 +359,41 @@ board.appendChild(div);
 }
 
 // -------------------------------
-// 畫道路
+// 畫道路（平滑 S 型曲線）
 // -------------------------------
 
 function drawRoads(){
 
-roads.forEach(r=>{
+const pts = spaces.map(s=>({x:s.x+41, y:s.y+41}));
 
-const a=spaces[r[0]];
+let d = `M ${pts[0].x} ${pts[0].y}`;
 
-const b=spaces[r[1]];
+for(let i=0;i<pts.length-1;i++){
+
+    const p0=pts[Math.max(i-1,0)];
+
+    const p1=pts[i];
+
+    const p2=pts[i+1];
+
+    const p3=pts[Math.min(i+2,pts.length-1)];
+
+    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+
+    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+
+    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
+
+}
 
 const line=document.createElementNS(
 "http://www.w3.org/2000/svg",
 "path"
 );
 
-line.setAttribute(
-"d",
-`M ${a.x+41} ${a.y+41}
-L ${b.x+41} ${b.y+41}`
-);
+line.setAttribute("d", d);
 
 roadLayer.appendChild(line);
-
-});
 
 }
 
@@ -833,39 +910,180 @@ document
 .addEventListener("keyup",updateNames);
 
 }
-function fitBoard(){
+// -------------------------------
+// 棋盤拖曳平移
+// -------------------------------
 
-const container=document.getElementById("boardContainer");
+const viewport=document.getElementById("boardViewport");
+const boardContainerEl=document.getElementById("boardContainer");
 
-const rightPanel=document.getElementById("rightPanel");
+let viewX=0, viewY=0;
+let viewScale=1;
 
-const topBar=64;
+function clampView(){
 
-const padding=30;
+const vw=viewport.clientWidth;
+const vh=viewport.clientHeight;
 
-const availableWidth=
+const cw=BOARD_W*viewScale;
+const ch=BOARD_H*viewScale;
 
-window.innerWidth-rightPanel.offsetWidth-padding;
+if(cw<=vw){
+    viewX=(vw-cw)/2;
+}else{
+    viewX=Math.max(vw-cw, Math.min(0, viewX));
+}
 
-const availableHeight=
-
-window.innerHeight-topBar-padding;
-
-const scale=Math.min(
-
-availableWidth/1450,
-
-availableHeight/980,
-
-1
-
-);
-
-container.style.transform=
-
-`scale(${scale})`;
+if(ch<=vh){
+    viewY=(vh-ch)/2;
+}else{
+    viewY=Math.max(vh-ch, Math.min(0, viewY));
+}
 
 }
+
+function applyView(){
+    boardContainerEl.style.transform=
+        `translate(${viewX}px, ${viewY}px) scale(${viewScale})`;
+}
+
+// -------------------------------
+// 開場地圖鏡頭動畫
+// -------------------------------
+
+const INTRO_HOLD_MS=10000;
+const INTRO_MOVE_MS=2600;
+
+let introPlaying=false;
+let introMoveTimer=null;
+
+function cameraToFit(){
+
+const vw=viewport.clientWidth;
+const vh=viewport.clientHeight;
+
+const s=Math.min(vw/BOARD_W, vh/BOARD_H)*0.95;
+
+return {
+    x:(vw-BOARD_W*s)/2,
+    y:(vh-BOARD_H*s)/2,
+    s:s
+};
+
+}
+
+function cameraAtStart(){
+    return {x:0, y:0, s:1};
+}
+
+function playIntro(){
+
+introPlaying=true;
+
+const fit=cameraToFit();
+
+viewX=fit.x;
+viewY=fit.y;
+viewScale=fit.s;
+
+viewport.classList.remove("intro-animating");
+
+applyView();
+
+void boardContainerEl.offsetWidth;
+
+introMoveTimer=setTimeout(()=>{
+
+    const t=cameraAtStart();
+
+    viewport.classList.add("intro-animating");
+
+    viewX=t.x;
+    viewY=t.y;
+    viewScale=t.s;
+
+    applyView();
+
+    introMoveTimer=setTimeout(finishIntro, INTRO_MOVE_MS+100);
+
+}, INTRO_HOLD_MS);
+
+}
+
+function finishIntro(){
+
+if(!introPlaying) return;
+
+introPlaying=false;
+clearTimeout(introMoveTimer);
+
+viewport.classList.remove("intro-animating");
+
+viewX=0;
+viewY=0;
+viewScale=1;
+
+clampView();
+applyView();
+
+}
+
+let panDragging=false;
+let panPointerId=null;
+let panStartX=0, panStartY=0;
+let panBaseX=0, panBaseY=0;
+
+viewport.addEventListener("pointerdown",e=>{
+
+if(introPlaying){
+    finishIntro();
+}
+
+if(panDragging) return;
+
+panDragging=true;
+panPointerId=e.pointerId;
+panStartX=e.clientX;
+panStartY=e.clientY;
+panBaseX=viewX;
+panBaseY=viewY;
+
+viewport.setPointerCapture(panPointerId);
+viewport.classList.add("dragging");
+
+e.preventDefault();
+
+});
+
+viewport.addEventListener("pointermove",e=>{
+
+if(!panDragging || e.pointerId!==panPointerId) return;
+
+viewX=panBaseX+(e.clientX-panStartX);
+viewY=panBaseY+(e.clientY-panStartY);
+
+clampView();
+applyView();
+
+e.preventDefault();
+
+});
+
+function panEnd(e){
+
+if(!panDragging || (e.pointerId!==undefined && e.pointerId!==panPointerId)) return;
+
+panDragging=false;
+panPointerId=null;
+
+viewport.classList.remove("dragging");
+
+}
+
+viewport.addEventListener("pointerup",panEnd);
+viewport.addEventListener("pointercancel",panEnd);
+
+viewport.addEventListener("dragstart",e=>e.preventDefault());
 
 // -------------------------------
 // 初始化
@@ -886,9 +1104,19 @@ teams.forEach((team,index)=>{
         team.score;
 
 });
-fitBoard();
+playIntro();
 
-window.addEventListener("resize",fitBoard);
+window.addEventListener("resize",()=>{
+
+if(introPlaying){
+    clearTimeout(introMoveTimer);
+    playIntro();
+}else{
+    clampView();
+    applyView();
+}
+
+});
 
 questionBox.textContent=
 "🎲 點擊『擲骰』開始遊戲";
