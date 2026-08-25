@@ -839,7 +839,7 @@ const container=document.getElementById("boardContainer");
 
 const rightPanel=document.getElementById("rightPanel");
 
-const topBar=95;
+const topBar=64;
 
 const padding=30;
 
