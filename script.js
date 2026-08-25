@@ -665,6 +665,8 @@ piece.style.left=(next.x+26+(currentTeam%2)*10)+"px";
 piece.style.top=(next.y+26+Math.floor(currentTeam/2)*10)+"px";
 highlightCell(now + 1);
 
+spotlightTeam(currentTeam);
+
 piece.classList.remove("jump");
 
 void piece.offsetWidth;
@@ -756,6 +758,14 @@ currentTeam=0;
 }
 
 updateTurn();
+
+viewport.classList.add("follow-cam");
+
+spotlightTeam(currentTeam);
+
+setTimeout(()=>{
+    viewport.classList.remove("follow-cam");
+},900);
 
 });
 
@@ -883,6 +893,8 @@ target=spaces.length-1;
 
 }
 
+viewport.classList.add("follow-cam");
+
 moveStep(team.position,target,()=>{
 
 team.position=target;
@@ -894,6 +906,10 @@ showQuestion();
 checkWinner();
 
 moving=false;
+
+setTimeout(()=>{
+    viewport.classList.remove("follow-cam");
+},850);
 
 });
 
@@ -945,6 +961,37 @@ if(ch<=vh){
 function applyView(){
     boardContainerEl.style.transform=
         `translate(${viewX}px, ${viewY}px) scale(${viewScale})`;
+}
+
+// -------------------------------
+// Spotlight：鏡頭平滑聚焦指定隊伍的娃娃
+// -------------------------------
+
+function spotlightTeam(index){
+
+if(introPlaying){
+    finishIntro();
+}
+
+const piece=document.getElementById("piece"+index);
+
+if(!piece) return;
+
+const px=parseFloat(piece.style.left)||0;
+const py=parseFloat(piece.style.top)||0;
+
+const cx=px+18;
+const cy=py+24;
+
+const vw=viewport.clientWidth;
+const vh=viewport.clientHeight;
+
+viewX=vw/2 - cx*viewScale;
+viewY=vh/2 - cy*viewScale;
+
+clampView();
+applyView();
+
 }
 
 // -------------------------------
@@ -1038,6 +1085,8 @@ viewport.addEventListener("pointerdown",e=>{
 if(introPlaying){
     finishIntro();
 }
+
+viewport.classList.remove("follow-cam");
 
 if(panDragging) return;
 
