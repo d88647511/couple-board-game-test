@@ -324,20 +324,59 @@ roadLayer.appendChild(line);
 // 放置棋子
 // -------------------------------
 
-function placePieces(){
+function placePieces() {
+    // 先按位置分組
+    const posGroups = {};
+    teams.forEach((team, index) => {
+        const pos = team.position;
+        if (!posGroups[pos]) posGroups[pos] = [];
+        posGroups[pos].push(index);
+    });
 
-teams.forEach((team,index)=>{
+    // 為每個位置的棋子計算偏移並定位
+    Object.values(posGroups).forEach(indices => {
+        const count = indices.length;
+        const baseIdx = indices[0];
+        const p = spaces[teams[baseIdx].position];
 
-const piece=document.getElementById("piece"+index);
+        // 計算每個棋子的視覺偏移
+        indices.forEach((idx, i) => {
+            const piece = document.getElementById("piece" + idx);
+            const { dx, dy } = getPieceOffset(count, i);
+            piece.style.left = (p.x + 26 + dx) + "px";
+            piece.style.top = (p.y + 26 + dy) + "px";
+        });
+    });
+}
 
-const p=spaces[team.position];
+function getPieceOffset(count, i) {
+    const spacing = 18; // 基礎間距
+    const radius = 14;  // 排列半徑
 
-piece.style.left=(p.x+26+(index%2)*10)+"px";
-
-piece.style.top=(p.y+26+Math.floor(index/2)*10)+"px";
-
-});
-
+    if (count === 1) {
+        return { dx: 0, dy: 0 };
+    }
+    if (count === 2) {
+        // 左右排列
+        return { dx: (i === 0 ? -spacing/2 : spacing/2), dy: 0 };
+    }
+    if (count === 3) {
+        // 三角形排列
+        const angles = [-Math.PI/2, Math.PI/6, 5*Math.PI/6];
+        return { dx: Math.cos(angles[i]) * radius, dy: Math.sin(angles[i]) * radius };
+    }
+    if (count === 4) {
+        // 2x2 方陣
+        const row = Math.floor(i / 2);
+        const col = i % 2;
+        return {
+            dx: (col - 0.5) * spacing,
+            dy: (row - 0.5) * spacing
+        };
+    }
+    // 5人以上：圓形均勻分佈
+    const angle = (i / count) * 2 * Math.PI - Math.PI/2;
+    return { dx: Math.cos(angle) * radius, dy: Math.sin(angle) * radius };
 }
 
 // -------------------------------
