@@ -33,9 +33,18 @@ function playConfetti() {
 console.log("✅ Firebase Ready");
 // 監聽手機是否要求擲骰
 let lastRollTimestamp = 0;
+let isFirstRollLoad = true;
 onValue(ref(db, "remote/roll"), (snapshot) => {
 
     const val = snapshot.val();
+    if (isFirstLoad) {
+        // 忽略首次載入的現有值，避免自動觸發擲骰
+        if (typeof val === "number") {
+            lastRollTimestamp = val;
+        }
+        isFirstLoad = false;
+        return;
+    }
     if (typeof val === "number" && val > lastRollTimestamp) {
         lastRollTimestamp = val;
         console.log("📱 手機要求擲骰:", val);
