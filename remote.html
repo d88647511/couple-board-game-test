@@ -12,10 +12,46 @@ body{
     margin:0;
     height:100vh;
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
     background:#ffe6ef;
     font-family:sans-serif;
+}
+
+.dice-container {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.dice-icon {
+    font-size:160px;
+    line-height:1;
+    user-select:none;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+.dice-icon.bounce {
+    animation: diceBounce 300ms ease-out;
+}
+
+@keyframes diceBounce {
+    0%   { transform: scale(1); }
+    20%  { transform: scale(0.7); }
+    40%  { transform: scale(1.2); }
+    60%  { transform: scale(0.9); }
+    80%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.dice-label {
+    margin-top:12px;
+    font-size:22px;
+    color:#ff4f8f;
+    text-align:center;
+    line-height:1.4;
 }
 
 button{
@@ -29,22 +65,24 @@ button{
     color:white;
 }
 
-@keyframes bounce {
-    0%   { transform: scale(1); }
-    15%  { transform: scale(1.12); }
-    30%  { transform: scale(0.92); }
-    45%  { transform: scale(1.06); }
-    60%  { transform: scale(0.96); }
-    75%  { transform: scale(1.02); }
-    100% { transform: scale(1); }
+button:active {
+    background:#e8457d;
 }
 
-button.bounce {
-    animation: bounce 350ms ease-out;
+.permission-btn {
+    background:#ffb3d1 !important;
+    color:#cc2d6d !important;
+    font-size:28px !important;
+    height:120px !important;
+    margin-top:20px;
+}
+
+.hidden {
+    display:none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    button.bounce { animation: none; }
+    .dice-icon.bounce { animation: none; }
 }
 
 </style>
@@ -52,9 +90,14 @@ button.bounce {
 </head>
 <body>
 
-<button id="rollBtn">
-🎲 擲骰
-</button>
+<div class="dice-container">
+    <div id="diceIcon" class="dice-icon">🎲</div>
+    <div id="diceLabel" class="dice-label">甩動手機即可擲骰</div>
+</div>
+
+<button id="rollBtn">🎲 點我擲骰</button>
+
+<button id="permissionBtn" class="permission-btn hidden">點擊啟用甩動控制</button>
 
 <script type="module">
 
@@ -74,48 +117,135 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const diceIcon = document.getElementById("diceIcon");
+const diceLabel = document.getElementById("diceLabel");
+const rollBtn = document.getElementById("rollBtn");
+const permissionBtn = document.getElementById("permissionBtn");
 
-function playClickSound() {
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "square";
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.08);
+const diceSound = new Audio("dice.mp3");
+diceSound.volume = 0.8;
+
+let shakePermissionGranted = false;
+let shakeEnabled = false;
+let lastShakeTime = 0;
+const SHAKE_COOLDOWN = 1000;
+const SHAKE_THRESHOLD = 25;
+
+function playDiceSound() {
+    diceSound.currentTime = 0;
+    diceSound.play().catch(() => {});
 }
 
-document.getElementById("rollBtn").onclick = async () => {
+function triggerDiceAnimation() {
+    diceIcon.classList.add("bounce");
+    diceIcon.addEventListener("animationend", () => diceIcon.classList.remove("bounce"), { once: true });
+}
 
-    console.log("按鈕被按了");
-
-    const btn = document.getElementById("rollBtn");
-
-    btn.classList.add("bounce");
-    btn.addEventListener("animationend", () => btn.classList.remove("bounce"), { once: true });
-
-    btn.style.background = "#ff99bb";
-    setTimeout(() => btn.style.background = "", 100);
-
-    playClickSound();
-
-    if (navigator.vibrate) {
-        const ok = navigator.vibrate(200);
-        console.log("震動觸發:", ok);
-    } else {
-        console.log("此裝置不支援 navigator.vibrate");
-    }
-
+async function sendRollCommand() {
     const timestamp = Date.now();
     await set(ref(db, "remote/roll"), timestamp);
-
     console.log("已寫入 timestamp:", timestamp);
+}
 
+async function rollDice() {
+    console.log("執行擲骰");
+    playDiceSound();
+    triggerDiceAnimation();
+    await sendRollCommand();
+}
+
+function handleShakeEvent(event) {
+    if (!shakeEnabled) return;
+    if (!shakePermissionGranted) return;
+
+    const now = Date.now();
+    if (now - lastShakeTime < SHAKE_COOLDOWN) return;
+
+    const accel = event.accelerationIncludingGravity;
+    if (!accel) return;
+
+    const magnitude = Math.sqrt(accel.x * accel.x + accel.y * accel.y + accel.z * accel.z);
+    const delta = Math.abs(magnitude - 9.81);
+
+    if (delta > SHAKE_THRESHOLD) {
+        lastShakeTime = now;
+        console.log("偵測到甩動:", delta.toFixed(2));
+        rollDice();
+    }
+}
+
+async function requestShakePermission() {
+    if (typeof DeviceMotionEvent === "undefined") {
+        diceLabel.textContent = "目前裝置不支援甩動控制，請按下方按鈕擲骰。";
+        permissionBtn.classList.add("hidden");
+        return;
+    }
+
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+        try {
+            const permission = await DeviceMotionEvent.requestPermission();
+            if (permission === "granted") {
+                shakePermissionGranted = true;
+                enableShakeDetection();
+                permissionBtn.classList.add("hidden");
+                diceLabel.textContent = "甩動手機即可擲骰";
+            } else {
+                diceLabel.textContent = "未授權甩動權限，請按下方按鈕擲骰。";
+            }
+        } catch (e) {
+            console.error("權限請求失敗:", e);
+            diceLabel.textContent = "權限請求失效，請按下方按鈕擲骰。";
+        }
+    } else {
+        shakePermissionGranted = true;
+        enableShakeDetection();
+        permissionBtn.classList.add("hidden");
+        diceLabel.textContent = "甩動手機即可擲骰";
+    }
+}
+
+function enableShakeDetection() {
+    if (shakeEnabled) return;
+    window.addEventListener("devicemotion", handleShakeEvent);
+    shakeEnabled = true;
+    console.log("甩動偵測已啟用");
+}
+
+function disableShakeDetection() {
+    window.removeEventListener("devicemotion", handleShakeEvent);
+    shakeEnabled = false;
+}
+
+rollBtn.onclick = async () => {
+    console.log("按鈕被按了");
+    rollBtn.style.background = "#ff99bb";
+    setTimeout(() => rollBtn.style.background = "", 100);
+
+    if (navigator.vibrate) {
+        navigator.vibrate(200);
+    }
+
+    await rollDice();
 };
+
+permissionBtn.onclick = requestShakePermission;
+
+// 初始化：三種情況互斥
+if (typeof DeviceMotionEvent === "undefined") {
+    // 完全不支援 DeviceMotionEvent
+    diceLabel.textContent = "目前裝置不支援甩動控制，請按下方按鈕擲骰。";
+    permissionBtn.classList.add("hidden");
+} else if (typeof DeviceMotionEvent.requestPermission === "function") {
+    // iOS 13+：需要請求權限
+    permissionBtn.classList.remove("hidden");
+    diceLabel.textContent = "點擊上方按鈕啟用甩動控制";
+} else {
+    // Android / 其他：直接啟用
+    shakePermissionGranted = true;
+    enableShakeDetection();
+    permissionBtn.classList.add("hidden");
+    diceLabel.textContent = "甩動手機即可擲骰";
+}
 
 </script>
 
