@@ -332,6 +332,15 @@ const roadLayer = document.getElementById("roadLayer");
 // 建立格子
 // -------------------------------
 
+// 格子名稱（顯示在等角磚上，依規格標籤對照表）
+const SPACE_NAMES=[
+"","甜蜜約會","共同目標","意見不合","旅行計畫","驚喜禮物","家務分工",
+"吵架冷戰","一起運動","投資理財","家人相處","學習成長","倆錢觀念","體速觀念",
+"金錢觀念","攜手對去","犒賞對去","回憶時光","邦子計畫","意外事件","彼此約會",
+"旅行冒險","小確幸","人生規劃","彼此支持","幸福滿點",
+"","","","",""
+];
+
 function buildBoard(){
 
 spaces.forEach((space,index)=>{
@@ -346,11 +355,30 @@ if(index===spaces.length-1) div.classList.add("goal");
 
 div.dataset.index=index;
 
-div.style.left=space.x+"px";
+const isStart=index===0;
+const isGoal=index===spaces.length-1;
 
-div.style.top=space.y+"px";
+// 以格子中心定位（起點/終點磚較大）
+const hw=isStart||isGoal?130:120;
+const hh=isStart||isGoal?91:84;
 
-div.innerHTML=space.icon;
+div.style.left=(space.x+41-hw)+"px";
+
+div.style.top=(space.y+41-hh)+"px";
+
+if(isStart){
+
+div.innerHTML='<div class="space-inner"><span class="space-big">❤️</span><span class="space-name">START</span></div>';
+
+}else if(isGoal){
+
+div.innerHTML='<div class="space-inner"><span class="space-big">💕</span><span class="space-name">LOVE 終點</span></div>';
+
+}else{
+
+div.innerHTML=`<div class="space-inner"><span class="space-num">${index}</span><span class="space-icon">${space.icon}</span><span class="space-name">${SPACE_NAMES[index]}</span></div>`;
+
+}
 
 board.appendChild(div);
 
@@ -386,14 +414,21 @@ for(let i=0;i<pts.length-1;i++){
 
 }
 
-const line=document.createElementNS(
-"http://www.w3.org/2000/svg",
-"path"
-);
+const wall=document.createElementNS("http://www.w3.org/2000/svg","path");
 
-line.setAttribute("d", d);
+wall.setAttribute("d", d);
 
-roadLayer.appendChild(line);
+wall.classList.add("road-wall");
+
+roadLayer.appendChild(wall);
+
+const surface=document.createElementNS("http://www.w3.org/2000/svg","path");
+
+surface.setAttribute("d", d);
+
+surface.classList.add("road-surface");
+
+roadLayer.appendChild(surface);
 
 }
 
@@ -402,15 +437,32 @@ roadLayer.appendChild(line);
 // -------------------------------
 
 function placePieces() {
-    // 先按位置分組
+    // 未入場(等待區)與已入場分開處理
+    const waiting = [];
     const posGroups = {};
     teams.forEach((team, index) => {
+        if (!team.entered) {
+            waiting.push(index);
+            return;
+        }
         const pos = team.position;
         if (!posGroups[pos]) posGroups[pos] = [];
         posGroups[pos].push(index);
     });
 
-    // 為每個位置的棋子計算偏移並定位
+    // 等待區：以起點格為圓心，在外圍均勻排成一圈
+    const startC = spaces[0];
+    const n = waiting.length;
+    waiting.forEach((idx, i) => {
+        const piece = document.getElementById("piece" + idx);
+        const angle = (i / n) * 2 * Math.PI - Math.PI/2;
+        const wx = startC.x + 41 + Math.cos(angle) * WAIT_RING_R;
+        const wy = startC.y + 41 + Math.sin(angle) * WAIT_RING_R;
+        piece.style.left = (wx - 22) + "px";
+        piece.style.top = (wy - 28) + "px";
+    });
+
+    // 已入場：為每個位置的棋子計算偏移並定位
     Object.values(posGroups).forEach(indices => {
         const count = indices.length;
         const baseIdx = indices[0];
@@ -420,11 +472,13 @@ function placePieces() {
         indices.forEach((idx, i) => {
             const piece = document.getElementById("piece" + idx);
             const { dx, dy } = getPieceOffset(count, i);
-            piece.style.left = (p.x + 26 + dx) + "px";
-            piece.style.top = (p.y + 26 + dy) + "px";
+            piece.style.left = (p.x + 19 + dx) + "px";
+            piece.style.top = (p.y + 13 + dy) + "px";
         });
     });
 }
+
+const WAIT_RING_R = 62;
 
 function getPieceOffset(count, i) {
     const spacing = 18; // 基礎間距
@@ -660,9 +714,9 @@ const piece=document.getElementById("piece"+currentTeam);
 
 const next=spaces[now+1];
 
-piece.style.left=(next.x+26+(currentTeam%2)*10)+"px";
+piece.style.left=(next.x+19+(currentTeam%2)*10)+"px";
 
-piece.style.top=(next.y+26+Math.floor(currentTeam/2)*10)+"px";
+piece.style.top=(next.y+13+Math.floor(currentTeam/2)*10)+"px";
 highlightCell(now + 1);
 
 spotlightTeam(currentTeam);
@@ -895,6 +949,8 @@ target=spaces.length-1;
 
 viewport.classList.add("follow-cam");
 
+const beginMove=()=>{
+
 moveStep(team.position,target,()=>{
 
 team.position=target;
@@ -912,6 +968,33 @@ setTimeout(()=>{
 },850);
 
 });
+
+};
+
+if(!team.entered){
+
+    // 第一次擲骰：先從起點外圍等待區滑入起點格
+    team.entered=true;
+
+    const sp=spaces[0];
+
+    const el=document.getElementById("piece"+currentTeam);
+
+    el.style.left=(sp.x+19+(currentTeam%2)*10)+"px";
+
+    el.style.top=(sp.y+13+Math.floor(currentTeam/2)*10)+"px";
+
+    highlightCell(0);
+
+    spotlightTeam(currentTeam);
+
+    setTimeout(beginMove,480);
+
+}else{
+
+    beginMove();
+
+}
 
 };
 
@@ -980,8 +1063,8 @@ if(!piece) return;
 const px=parseFloat(piece.style.left)||0;
 const py=parseFloat(piece.style.top)||0;
 
-const cx=px+18;
-const cy=py+24;
+const cx=px+22;
+const cy=py+28;
 
 const vw=viewport.clientWidth;
 const vh=viewport.clientHeight;
@@ -1106,6 +1189,8 @@ e.preventDefault();
 
 viewport.addEventListener("pointermove",e=>{
 
+if(pinching) return;
+
 if(!panDragging || e.pointerId!==panPointerId) return;
 
 viewX=panBaseX+(e.clientX-panStartX);
@@ -1133,6 +1218,116 @@ viewport.addEventListener("pointerup",panEnd);
 viewport.addEventListener("pointercancel",panEnd);
 
 viewport.addEventListener("dragstart",e=>e.preventDefault());
+
+// -------------------------------
+// 手動縮放（觸控板 pinch + 雙指 pinch）
+// 與拖曳/Spotlight 共用 viewScale 相機系統
+// -------------------------------
+
+const ZOOM_MIN=0.6;
+const ZOOM_MAX=2.0;
+
+const activePtrs=new Map();
+let pinching=false;
+let pinchStartDist=1;
+let pinchStartScale=1;
+
+function setZoom(newScale,ax,ay){
+
+newScale=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,newScale));
+
+// 縮放前後，錨點下的棋盤座標保持不動
+const bx=(ax-viewX)/viewScale;
+const by=(ay-viewY)/viewScale;
+
+viewScale=newScale;
+viewX=ax-bx*viewScale;
+viewY=ay-by*viewScale;
+
+clampView();
+applyView();
+
+}
+
+function localPoint(clientX,clientY){
+    const r=viewport.getBoundingClientRect();
+    return {x:clientX-r.left,y:clientY-r.top};
+}
+
+function tryStartPinch(){
+
+if(introPlaying) return;
+
+if(viewport.classList.contains("follow-cam")) return;
+
+const pts=[...activePtrs.values()];
+
+pinchStartDist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y)||1;
+
+pinchStartScale=viewScale;
+
+pinching=true;
+
+}
+
+function updatePinch(){
+
+if(!pinching || activePtrs.size<2) return;
+
+const pts=[...activePtrs.values()];
+
+const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y)||1;
+
+const mid={
+    x:(pts[0].x+pts[1].x)/2,
+    y:(pts[0].y+pts[1].y)/2
+};
+
+const lp=localPoint(mid.x,mid.y);
+
+setZoom(pinchStartScale*dist/pinchStartDist,lp.x,lp.y);
+
+}
+
+viewport.addEventListener("pointerdown",e=>{
+    activePtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(activePtrs.size===2){
+        if(panDragging){
+            panDragging=false;
+            panPointerId=null;
+            viewport.classList.remove("dragging");
+        }
+        tryStartPinch();
+    }
+    e.preventDefault();
+});
+
+viewport.addEventListener("pointermove",e=>{
+    if(!activePtrs.has(e.pointerId)) return;
+    activePtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    updatePinch();
+});
+
+function zoomPtrEnd(e){
+    activePtrs.delete(e.pointerId);
+    if(activePtrs.size<2) pinching=false;
+}
+
+viewport.addEventListener("pointerup",zoomPtrEnd);
+viewport.addEventListener("pointercancel",zoomPtrEnd);
+
+// Mac 觸控板雙指捏合 → 瀏覽器送出 ctrlKey + wheel
+viewport.addEventListener("wheel",e=>{
+
+if(!e.ctrlKey && !e.metaKey) return;
+
+e.preventDefault();
+
+const lp=localPoint(e.clientX,e.clientY);
+
+setZoom(viewScale*Math.exp(-e.deltaY*0.002),lp.x,lp.y);
+
+},{passive:false});
 
 // -------------------------------
 // 初始化
@@ -1169,6 +1364,45 @@ if(introPlaying){
 
 questionBox.textContent=
 "🎲 點擊『擲骰』開始遊戲";
+
+// -------------------------------
+// 底部工具列
+// -------------------------------
+
+document.getElementById("sfxBtn").addEventListener("click",()=>{
+    musicBtn.click();
+});
+
+document.getElementById("qBtn").addEventListener("click",()=>{
+    if(!questionOverlay.classList.contains("show")){
+        overlayQuestion.textContent=questionBox.textContent;
+        questionOverlay.classList.add("show");
+    }
+});
+
+document.getElementById("scoreBtn").addEventListener("click",()=>{
+    const card=document.getElementById("scoreBoard").closest(".card");
+    card.scrollIntoView({behavior:"smooth",block:"nearest"});
+    card.style.transition="box-shadow .3s";
+    card.style.boxShadow="0 0 0 3px #ffb6d5";
+    setTimeout(()=>{card.style.boxShadow="";},900);
+});
+
+document.getElementById("rulesBtn").addEventListener("click",()=>{
+    alert(
+"📋 遊戲規則\n\n"+
+"1️⃣ 各隊輪流擲骰前進\n"+
+"2️⃣ 停在格子上回答該格題目\n"+
+"3️⃣ 答對 +1 分、優秀回答 +2 分\n"+
+"4️⃣ 抵達終點後，總分最高者獲勝！"
+    );
+});
+
+document.getElementById("homeBtn").addEventListener("click",()=>{
+    if(confirm("確定要返回大廳重新開始？目前的進度會消失。")){
+        location.reload();
+    }
+});
 
 // -------------------------------
 // Console
@@ -1290,6 +1524,7 @@ dice.textContent = state.dice;
         teams[index].position = team.position;
         teams[index].score = team.score;
         teams[index].name = team.name;
+        teams[index].entered = team.entered;
     });
 
     // 更新棋子位置
