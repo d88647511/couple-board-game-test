@@ -2,55 +2,105 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>主持人控制台</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🎤 主持人控制台</title>
 <style>
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-    margin:0;
-    padding:20px;
-    background:#222;
-    font-family:sans-serif;
+    background:#1a1a2e;
+    font-family:'PingFang TC','Noto Sans TC',sans-serif;
+    padding:12px;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
 }
-
 h1{
-    color:white;
+    color:#fff;
     text-align:center;
+    font-size:20px;
+    padding:8px 0 10px;
+    letter-spacing:1px;
 }
-
-button{
+.host-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    flex:1;
+}
+.host-grid button{
     width:100%;
-    font-size:28px;
-    padding:18px;
-    margin:10px 0;
+    min-height:56px;
+    font-size:15px;
+    font-weight:600;
+    padding:8px 4px;
     border:none;
-    border-radius:12px;
+    border-radius:14px;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    line-height:1.2;
 }
+.host-grid button:active{
+    transform:scale(0.90);
+    box-shadow:0 1px 3px rgba(0,0,0,.2) !important;
+}
+.btn-icon{font-size:22px;line-height:1}
+.btn-label{font-size:12px;opacity:.85}
+
+/* Row 1: 答題控制 — 粉紅系 */
+.r1{background:linear-gradient(135deg,#ff6b9d,#ff4081);color:#fff;box-shadow:0 3px 8px rgba(255,64,129,.35)}
+/* Row 2: 遊戲流程 — 藍色系 */
+.r2{background:linear-gradient(135deg,#42a5f5,#1e88e5);color:#fff;box-shadow:0 3px 8px rgba(30,136,229,.35)}
+/* Row 3: 工具列 — 紫色系 */
+.r3{background:linear-gradient(135deg,#ab47bc,#8e24aa);color:#fff;box-shadow:0 3px 8px rgba(142,36,170,.35)}
+/* Row 4: 特殊/預留 — 深色系 */
+.r4{background:linear-gradient(135deg,#546e7a,#37474f);color:#fff;box-shadow:0 3px 8px rgba(55,71,79,.35)}
+.r4.placeholder{background:linear-gradient(135deg,#333,#2a2a2a);color:rgba(255,255,255,.3);box-shadow:none;cursor:default}
+.r4.placeholder:active{transform:none}
+
+/* BGM active state */
+.bgm-on{background:linear-gradient(135deg,#66bb6a,#43a047) !important;box-shadow:0 3px 8px rgba(67,160,71,.35) !important}
 </style>
-
 </head>
-
 <body>
 
 <h1>🎤 主持人控制台</h1>
 
-<button id="startBtn">⏱ 開始作答</button>
+<div class="host-grid">
+    <!-- Row 1: 答題控制 -->
+    <button id="startBtn" class="r1"><span class="btn-icon">⏱</span><span class="btn-label">開始作答</span></button>
+    <button id="score1Btn" class="r1"><span class="btn-icon">✅</span><span class="btn-label">+1 分</span></button>
+    <button id="score2Btn" class="r1"><span class="btn-icon">🌟</span><span class="btn-label">+2 分</span></button>
+    <button id="closeBtn" class="r1"><span class="btn-icon">❌</span><span class="btn-label">關閉題目</span></button>
 
-<button id="score1Btn">✅ +1 分</button>
+    <!-- Row 2: 遊戲流程 -->
+    <button id="nextBtn" class="r2"><span class="btn-icon">➡️</span><span class="btn-label">下一隊</span></button>
+    <button id="rollBtn" class="r2"><span class="btn-icon">🎲</span><span class="btn-label">擲骰子</span></button>
+    <button id="undoBtn" class="r2"><span class="btn-icon">↩️</span><span class="btn-label">Undo</span></button>
+    <button id="winnerBtn" class="r2"><span class="btn-icon">🏆</span><span class="btn-label">總分結算</span></button>
 
-<button id="score2Btn">🌟 +2 分</button>
+    <!-- Row 3: 工具列 -->
+    <button id="cheerBtn" class="r3"><span class="btn-icon">🎉</span><span class="btn-label">歡呼</span></button>
+    <button id="bgmBtn" class="r3"><span class="btn-icon">🔇</span><span class="btn-label">暫停 BGM</span></button>
+    <button id="qBtn" class="r3"><span class="btn-icon">❓</span><span class="btn-label">顯示題目</span></button>
+    <button id="rulesBtn" class="r3"><span class="btn-icon">📋</span><span class="btn-label">規則</span></button>
 
-<button id="closeBtn">❌ 關閉題目</button>
+    <!-- Row 4: 特殊 / 預留 -->
+    <button id="trialFailBtn" class="r4"><span class="btn-icon">🌧️</span><span class="btn-label">試煉失敗</span></button>
+    <button id="repairBtn" class="r4"><span class="btn-icon">❤️</span><span class="btn-label">修復關係</span></button>
+    <button class="r4 placeholder"><span class="btn-icon">➕</span><span class="btn-label">未來擴充</span></button>
+    <button class="r4 placeholder"><span class="btn-icon">·</span><span class="btn-label">　</span></button>
+</div>
 
-<button id="nextBtn">➡ 下一隊</button>
-
-<button id="undoBtn">↩ 上一步</button>
-<button id="cheerBtn">🎉 歡呼</button>
-
-<button id="winnerBtn">🏆 總分結算</button>
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
@@ -68,19 +118,40 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 console.log("✅ Host Ready");
+
 async function sendCommand(command) {
     await set(ref(db, "host/" + command), true);
     await set(ref(db, "host/" + command), false);
 }
 
+// Row 1: 答題控制
 document.getElementById("startBtn").onclick = () => sendCommand("start");
 document.getElementById("score1Btn").onclick = () => sendCommand("score1");
 document.getElementById("score2Btn").onclick = () => sendCommand("score2");
 document.getElementById("closeBtn").onclick = () => sendCommand("close");
+
+// Row 2: 遊戲流程
 document.getElementById("nextBtn").onclick = () => sendCommand("next");
+document.getElementById("rollBtn").onclick = () => sendCommand("roll");
 document.getElementById("undoBtn").onclick = () => sendCommand("undo");
 document.getElementById("winnerBtn").onclick = () => sendCommand("winner");
+
+// Row 3: 工具列
 document.getElementById("cheerBtn").onclick = () => sendCommand("cheer");
+document.getElementById("bgmBtn").onclick = () => {
+    sendCommand("bgm");
+    const icon = document.querySelector("#bgmBtn .btn-icon");
+    const label = document.querySelector("#bgmBtn .btn-label");
+    const isOn = document.getElementById("bgmBtn").classList.toggle("bgm-on");
+    icon.textContent = isOn ? "🎵" : "🔇";
+    label.textContent = isOn ? "播放 BGM" : "暫停 BGM";
+};
+document.getElementById("qBtn").onclick = () => sendCommand("showq");
+document.getElementById("rulesBtn").onclick = () => sendCommand("rules");
+
+// Row 4: 特殊
+document.getElementById("trialFailBtn").onclick = () => sendCommand("trialFail");
+document.getElementById("repairBtn").onclick = () => sendCommand("repair");
 </script>
 </body>
 </html>

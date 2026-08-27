@@ -25,9 +25,14 @@ body{
 body{
 
 background:
-radial-gradient(circle at 25% 25%,rgba(255,255,255,.5),transparent 30%),
-radial-gradient(circle at 75% 80%,rgba(255,255,255,.35),transparent 28%),
-linear-gradient(180deg,#f3ead7,#eaddc4,#f2e9d8);
+
+radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.45),transparent 50%),
+
+radial-gradient(ellipse at 70% 70%,rgba(255,255,255,.2),transparent 45%),
+
+radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(180,140,100,.08) 100%),
+
+linear-gradient(180deg,#f5ead8,#eedfc5,#f0e5d0);
 
 position:relative;
 
@@ -216,21 +221,14 @@ position:relative;
 
 #boardViewport.dragging .space:hover{
 
-    transform:var(--tf);
+    transform:none;
 
 }
 
-#boardViewport.intro-animating #boardContainer{
-
-    transition:
-        transform 2.6s cubic-bezier(.45,.05,.25,1);
-
-}
-
+#boardViewport.intro-animating #boardContainer,
 #boardViewport.follow-cam #boardContainer{
 
-    transition:
-        transform .75s cubic-bezier(.35,.08,.22,1);
+    transition:none;
 
 }
 
@@ -245,6 +243,40 @@ position:relative;
     transform-origin:0 0;
 
     will-change:transform;
+
+}
+
+#boardGround{
+
+    position:absolute;
+
+    left:60px;
+
+    top:60px;
+
+    width:2280px;
+
+    height:1530px;
+
+    background:
+
+    radial-gradient(ellipse at 40% 35%,rgba(255,255,255,.25),transparent 55%),
+
+    linear-gradient(180deg,#e8d5b8,#dcc8a8,#e0cfb5);
+
+    border-radius:50px;
+
+    border:3px solid rgba(180,150,110,.25);
+
+    box-shadow:
+
+    inset 0 2px 20px rgba(255,255,255,.35),
+
+    inset 0 -4px 16px rgba(0,0,0,.06),
+
+    0 8px 32px rgba(0,0,0,.12);
+
+    z-index:0;
 
 }
 
@@ -303,12 +335,117 @@ position:relative;
 }
 
 /* =========================
-   道路 SVG
+   自然裝飾：草叢
+========================= */
+.deco-grass{
+position:absolute;
+width:40px;height:16px;
+background:radial-gradient(ellipse at 50% 100%,#7cb85a 0%,#5da03a 60%,transparent 100%);
+border-radius:50% 50% 40% 40%;
+opacity:.45;
+filter:saturate(.8);
+}
+.deco-grass.sm{width:28px;height:12px;opacity:.35;}
+.deco-grass.lg{width:56px;height:20px;opacity:.5;}
+
+/* =========================
+   自然裝飾：花叢
+========================= */
+.deco-flowers{
+position:absolute;
+display:flex;gap:3px;align-items:flex-end;
+opacity:.5;filter:saturate(.85);
+}
+.deco-flowers .petal{
+width:10px;height:10px;border-radius:50%;
+box-shadow:inset 0 -1px 2px rgba(0,0,0,.1);
+}
+.deco-flowers .petal.r{background:radial-gradient(circle at 40% 35%,#ffb3c6,#ff6b8a);}
+.deco-flowers .petal.y{background:radial-gradient(circle at 40% 35%,#fff3a3,#ffd23f);}
+.deco-flowers .petal.p{background:radial-gradient(circle at 40% 35%,#e0b3ff,#c77dff);}
+.deco-flowers .petal.w{background:radial-gradient(circle at 40% 35%,#ffffff,#e8e0f0);}
+.deco-flowers .petal.b{background:radial-gradient(circle at 40% 35%,#b3d9ff,#6bb5ff);}
+.deco-flowers .stem{
+width:2px;height:14px;
+background:linear-gradient(180deg,#6aa84f,#4a8630);
+border-radius:1px;
+}
+
+/* =========================
+   自然裝飾：小灌木
+========================= */
+.deco-bush{
+position:absolute;
+width:44px;height:28px;
+background:radial-gradient(ellipse at 45% 40%,#8fd46e,#5cb83a,#3d8c24);
+border-radius:50%;
+border:1.5px solid rgba(60,120,30,.2);
+box-shadow:inset 0 -3px 6px rgba(0,0,0,.1),0 2px 4px rgba(0,0,0,.08);
+opacity:.5;filter:saturate(.75);
+}
+.deco-bush.sm{width:30px;height:20px;opacity:.4;}
+.deco-bush.lg{width:60px;height:36px;opacity:.55;}
+
+/* =========================
+   自然裝飾：小石頭
+========================= */
+.deco-stone{
+position:absolute;
+width:18px;height:12px;
+background:radial-gradient(ellipse at 40% 35%,#d4cfc8,#b0a898,#8a8078);
+border-radius:50%;
+box-shadow:inset 0 -1px 2px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.08);
+opacity:.35;
+}
+.deco-stone.sm{width:12px;height:8px;opacity:.28;}
+.deco-stone.lg{width:24px;height:16px;opacity:.4;}
+
+/* =========================
+   自然裝飾：落葉
+========================= */
+.deco-leaf{
+position:absolute;
+font-size:16px;
+opacity:.3;
+filter:saturate(.7);
+}
+
+/* =========================
+   自然裝飾：蝴蝶
+========================= */
+.deco-butterfly{
+position:absolute;
+font-size:14px;
+opacity:.35;
+animation:butterfly-float 6s ease-in-out infinite;
+}
+.deco-butterfly:nth-child(odd){animation-duration:7s;animation-delay:-2s;}
+@keyframes butterfly-float{
+0%,100%{transform:translate(0,0) rotate(0deg);}
+25%{transform:translate(8px,-6px) rotate(5deg);}
+50%{transform:translate(-4px,-10px) rotate(-3deg);}
+75%{transform:translate(6px,-4px) rotate(4deg);}
+}
+
+/* =========================
+   自然裝飾：小蘑菇
+========================= */
+.deco-mushroom{
+position:absolute;
+font-size:18px;
+opacity:.35;
+filter:saturate(.8);
+}
+
+/* =========================
+   道路 SVG（S 型蜿蜒、可愛島嶼柏油路）
 ========================= */
 
 #roadLayer{
 
-    display:none;
+    display:block;
+
+    opacity:1;
 
     position:absolute;
 
@@ -322,15 +459,17 @@ position:relative;
 
     pointer-events:none;
 
-    z-index:1;
+    z-index:2;
+
+    filter:drop-shadow(0 10px 14px rgba(90,60,30,.16));
 
 }
 
 #roadLayer .road-wall{
 
-stroke:#c4a882;
+stroke:#cdbfa6;
 
-stroke-width:220px;
+stroke-width:250px;
 
 fill:none;
 
@@ -338,21 +477,43 @@ stroke-linecap:round;
 
 stroke-linejoin:round;
 
-transform:translate(0,12px);
+transform:translate(0,16px);
+
+opacity:.9;
 
 }
 
 #roadLayer .road-surface{
 
-stroke:#f5e8d5;
+stroke:#e6d8c0;
 
-stroke-width:206px;
+stroke-width:238px;
 
 fill:none;
 
 stroke-linecap:round;
 
 stroke-linejoin:round;
+
+}
+
+#roadLayer .road-dash{
+
+stroke:rgba(255,253,240,.85);
+
+stroke-width:9px;
+
+fill:none;
+
+stroke-linecap:round;
+
+stroke-linejoin:round;
+
+stroke-dasharray:34 46;
+
+opacity:.9;
+
+filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));
 
 }
 
@@ -395,18 +556,606 @@ stroke-linejoin:round;
 }
 
 /* =========================
+   噴泉 2.5D
+========================= */
+
+.scene-fountain{
+
+    position:absolute;
+
+    width:180px;
+
+    height:120px;
+
+    z-index:2;
+
+}
+
+.fountain-pool{
+
+    position:absolute;
+
+    bottom:0;
+
+    left:10px;
+
+    width:160px;
+
+    height:50px;
+
+    background:linear-gradient(180deg,#b8d8e8,#7bbad4,#5a9ec0);
+
+    border-radius:50%;
+
+    border:3px solid rgba(255,255,255,.4);
+
+    box-shadow:
+
+    inset 0 -8px 16px rgba(0,0,0,.15),
+
+    inset 0 4px 8px rgba(255,255,255,.3),
+
+    0 4px 12px rgba(0,0,0,.2);
+
+}
+
+.fountain-tier{
+
+    position:absolute;
+
+    bottom:25px;
+
+    left:40px;
+
+    width:100px;
+
+    height:28px;
+
+    background:linear-gradient(180deg,#e8ddd0,#d4c4b0);
+
+    border-radius:50%;
+
+    border:2px solid rgba(255,255,255,.3);
+
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+
+}
+
+.fountain-pillar{
+
+    position:absolute;
+
+    bottom:45px;
+
+    left:78px;
+
+    width:24px;
+
+    height:40px;
+
+    background:linear-gradient(180deg,#f0e8dc,#d8cbb8);
+
+    border-radius:4px 4px 0 0;
+
+    box-shadow:0 2px 4px rgba(0,0,0,.15);
+
+}
+
+.fountain-drop{
+
+    position:absolute;
+
+    width:6px;
+
+    height:6px;
+
+    background:rgba(180,220,245,.7);
+
+    border-radius:50%;
+
+    animation:fountainDrop 1.8s ease-in infinite;
+
+}
+
+.fountain-drop.d1{bottom:85px;left:82px;animation-delay:0s;}
+
+.fountain-drop.d2{bottom:80px;left:72px;animation-delay:.6s;}
+
+.fountain-drop.d3{bottom:82px;left:92px;animation-delay:1.2s;}
+
+@keyframes fountainDrop{
+
+    0%{opacity:.8;transform:translateY(0) scale(1);}
+
+    100%{opacity:0;transform:translateY(-30px) scale(.4);}
+
+}
+
+/* =========================
+   樹木 2.5D
+========================= */
+
+.scene-tree{
+
+    position:absolute;
+
+    width:80px;
+
+    height:100px;
+
+    z-index:2;
+
+}
+
+.tree-crown{
+
+    position:absolute;
+
+    top:0;
+
+    left:8px;
+
+    width:64px;
+
+    height:64px;
+
+    background:radial-gradient(ellipse at 40% 35%,#8fd46e,#5cb83a,#3d8c24);
+
+    border-radius:50%;
+
+    border:2px solid rgba(60,120,30,.3);
+
+    box-shadow:
+
+    inset 0 -6px 12px rgba(0,0,0,.12),
+
+    inset 0 6px 10px rgba(255,255,255,.2),
+
+    0 4px 8px rgba(0,0,0,.15);
+
+}
+
+.scene-tree.t2 .tree-crown,.scene-tree.t4 .tree-crown,.scene-tree.t8 .tree-crown{
+
+    background:radial-gradient(ellipse at 40% 35%,#a8d88a,#6cc048,#4a9c2e);
+
+}
+
+.scene-tree.t3 .tree-crown,.scene-tree.t6 .tree-crown{
+
+    width:54px;height:54px;left:13px;
+
+    background:radial-gradient(ellipse at 40% 35%,#7cc85a,#4ca832,#2d7c1a);
+
+}
+
+.tree-trunk{
+
+    position:absolute;
+
+    bottom:18px;
+
+    left:30px;
+
+    width:14px;
+
+    height:30px;
+
+    background:linear-gradient(90deg,#8b6842,#a07850,#8b6842);
+
+    border-radius:3px;
+
+    box-shadow:inset 0 0 4px rgba(0,0,0,.2);
+
+}
+
+.tree-shadow{
+
+    position:absolute;
+
+    bottom:0;
+
+    left:4px;
+
+    width:72px;
+
+    height:16px;
+
+    background:radial-gradient(ellipse,rgba(0,0,0,.12) 0%,transparent 70%);
+
+    border-radius:50%;
+
+}
+
+/* =========================
+   路燈 2.5D
+========================= */
+
+.scene-lamp{
+
+    position:absolute;
+
+    width:30px;
+
+    height:80px;
+
+    z-index:2;
+
+}
+
+.lamp-post{
+
+    position:absolute;
+
+    bottom:10px;
+
+    left:12px;
+
+    width:6px;
+
+    height:55px;
+
+    background:linear-gradient(90deg,#888,#aaa,#888);
+
+    border-radius:2px;
+
+}
+
+.lamp-head{
+
+    position:absolute;
+
+    top:8px;
+
+    left:3px;
+
+    width:24px;
+
+    height:16px;
+
+    background:linear-gradient(180deg,#fffae0,#ffe080);
+
+    border-radius:6px 6px 12px 12px;
+
+    border:1px solid rgba(180,140,40,.4);
+
+    box-shadow:0 2px 6px rgba(255,200,60,.3);
+
+}
+
+.lamp-glow{
+
+    position:absolute;
+
+    top:20px;
+
+    left:-6px;
+
+    width:42px;
+
+    height:42px;
+
+    background:radial-gradient(circle,rgba(255,230,120,.2),transparent 70%);
+
+    border-radius:50%;
+
+}
+
+/* =========================
+   長椅 2.5D
+========================= */
+
+.scene-bench{
+
+    position:absolute;
+
+    width:60px;
+
+    height:35px;
+
+    z-index:2;
+
+}
+
+.bench-seat{
+
+    position:absolute;
+
+    bottom:10px;
+
+    left:0;
+
+    width:60px;
+
+    height:10px;
+
+    background:linear-gradient(180deg,#c4945a,#a07840);
+
+    border-radius:3px;
+
+    box-shadow:0 2px 4px rgba(0,0,0,.15);
+
+}
+
+.bench-back{
+
+    position:absolute;
+
+    bottom:18px;
+
+    left:2px;
+
+    width:56px;
+
+    height:14px;
+
+    background:linear-gradient(180deg,#d4a868,#b88c50);
+
+    border-radius:3px 3px 0 0;
+
+    box-shadow:0 -1px 3px rgba(0,0,0,.1);
+
+}
+
+.bench-leg{
+
+    position:absolute;
+
+    bottom:0;
+
+    width:6px;
+
+    height:12px;
+
+    background:#8b6842;
+
+    border-radius:2px;
+
+}
+
+.bench-leg.l{left:6px;}
+
+.bench-leg.r{right:6px;}
+
+/* =========================
+   木柵欄 2.5D
+========================= */
+
+.scene-fence{
+
+    position:absolute;
+
+    height:30px;
+
+    z-index:2;
+
+    background:
+
+    repeating-linear-gradient(
+
+    90deg,
+
+    #f5ede0 0px,#f5ede0 6px,
+
+    transparent 6px,transparent 14px
+
+    );
+
+    border-top:3px solid #e8dcc8;
+
+    border-bottom:3px solid #d8c8a8;
+
+    box-shadow:0 2px 4px rgba(0,0,0,.1);
+
+    border-radius:2px;
+
+}
+
+/* =========================
+   涼亭 2.5D
+========================= */
+
+.scene-gazebo{
+
+    position:absolute;
+
+    width:120px;
+
+    height:100px;
+
+    z-index:2;
+
+}
+
+.gazebo-roof{
+
+    position:absolute;
+
+    top:0;
+
+    left:10px;
+
+    width:100px;
+
+    height:40px;
+
+    background:linear-gradient(180deg,#e8a0b8,#d47898);
+
+    clip-path:polygon(50% 0%,100% 100%,0% 100%);
+
+    box-shadow:0 4px 8px rgba(0,0,0,.15);
+
+}
+
+.gazebo-pillar{
+
+    position:absolute;
+
+    bottom:15px;
+
+    width:6px;
+
+    height:45px;
+
+    background:linear-gradient(90deg,#f0e8dc,#e0d4c4);
+
+    border-radius:2px;
+
+}
+
+.gazebo-pillar.p1{left:18px;}
+
+.gazebo-pillar.p2{right:18px;}
+
+.gazebo-pillar.p3{left:40px;}
+
+.gazebo-pillar.p4{right:40px;}
+
+.gazebo-base{
+
+    position:absolute;
+
+    bottom:8px;
+
+    left:8px;
+
+    width:104px;
+
+    height:12px;
+
+    background:#e8dcc8;
+
+    border-radius:3px;
+
+    box-shadow:0 2px 4px rgba(0,0,0,.12);
+
+}
+
+/* =========================
+   房子 2.5D
+========================= */
+
+.scene-house{
+
+    position:absolute;
+
+    width:120px;
+
+    height:100px;
+
+    z-index:2;
+
+}
+
+.house-wall{
+
+    position:absolute;
+
+    bottom:12px;
+
+    left:10px;
+
+    width:100px;
+
+    height:55px;
+
+    background:linear-gradient(180deg,#fff5e8,#f0e4d0);
+
+    border:2px solid #e0d0b8;
+
+    border-radius:4px;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.12);
+
+}
+
+.house-roof{
+
+    position:absolute;
+
+    top:8px;
+
+    left:0;
+
+    width:120px;
+
+    height:45px;
+
+    background:linear-gradient(180deg,#e87060,#d04838);
+
+    clip-path:polygon(50% 0%,100% 100%,0% 100%);
+
+    box-shadow:0 3px 6px rgba(0,0,0,.15);
+
+}
+
+.house-door{
+
+    position:absolute;
+
+    bottom:14px;
+
+    left:48px;
+
+    width:22px;
+
+    height:30px;
+
+    background:linear-gradient(180deg,#8b5e3c,#6b4228);
+
+    border-radius:11px 11px 0 0;
+
+    border:1px solid #5a3820;
+
+}
+
+.house-window{
+
+    position:absolute;
+
+    bottom:40px;
+
+    left:22px;
+
+    width:18px;
+
+    height:18px;
+
+    background:linear-gradient(135deg,#b8d8f0,#90c0e0);
+
+    border:2px solid #e0d0b8;
+
+    border-radius:3px;
+
+}
+
+.house-chimney{
+
+    position:absolute;
+
+    top:4px;
+
+    right:22px;
+
+    width:14px;
+
+    height:28px;
+
+    background:linear-gradient(90deg,#c85848,#a83828);
+
+    border-radius:2px 2px 0 0;
+
+}
+
+/* =========================
    格子（2.5D 等角磚）
 ========================= */
 
 .space{
 
---tf:rotate(30deg) scaleY(.7);
-
 position:absolute;
 
-width:240px;
-
-height:168px;
+box-sizing:border-box;
 
 display:flex;
 
@@ -414,55 +1163,33 @@ justify-content:center;
 
 align-items:center;
 
-border-radius:16px;
+border-radius:50%;
 
-border:3px solid rgba(0,0,0,.08);
+border:2px solid rgba(0,0,0,.06);
 
 background:linear-gradient(165deg,#ffffff,#faf0f5);
 
 box-shadow:
 
-inset 0 3px 6px rgba(255,255,255,.9),
+inset 0 3px 5px rgba(255,255,255,.95),
 
-0 5px 0 #c9a882,
+inset 0 -6px 10px rgba(190,140,120,.28),
 
-0 8px 16px rgba(0,0,0,.12);
+0 7px 0 #c9a882,
+
+0 14px 22px rgba(0,0,0,.16);
 
 transition:.25s;
 
-transform:var(--tf);
+    transform-origin:50% 50%;
 
-transform-origin:50% 50%;
-
-z-index:2;
-
-}
-
-.space::after{
-
-content:'';
-
-position:absolute;
-
-left:6px;
-
-top:100%;
-
-width:calc(100% - 12px);
-
-height:16px;
-
-background:inherit;
-
-filter:brightness(.86);
-
-border-radius:0 0 12px 12px;
+    z-index:4;
 
 }
 
 .space:hover{
 
-transform:var(--tf) scale(1.04);
+transform:scale(1.04);
 
 }
 
@@ -482,17 +1209,15 @@ align-items:center;
 
 gap:3px;
 
-transform:scaleY(calc(1 / .7)) rotate(-30deg);
-
 pointer-events:none;
 
 }
 
 .space-num{
 
-font-size:14px;
+font-size:16px;
 
-line-height:19px;
+line-height:21px;
 
 font-weight:900;
 
@@ -504,25 +1229,47 @@ border:1px solid #f2cfe0;
 
 border-radius:999px;
 
-padding:0 9px;
+padding:0 10px;
+
+min-width:24px;
+
+text-align:center;
 
 }
 
 .space-icon{
 
-font-size:38px;
+width:44px;
 
-line-height:1;
+height:44px;
 
-filter:drop-shadow(0 3px 3px rgba(0,0,0,.12));
+margin-top:4px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+filter:drop-shadow(0 3px 2px rgba(150,80,110,.22));
+
+}
+
+.space-icon svg{
+
+width:100%;
+
+height:100%;
+
+display:block;
 
 }
 
 .space-name{
 
-font-size:14px;
+font-size:13px;
 
-line-height:1.2;
+line-height:1.15;
 
 font-weight:700;
 
@@ -534,25 +1281,43 @@ background:rgba(255,255,255,.78);
 
 border-radius:8px;
 
-padding:2px 8px;
+padding:2px 6px;
 
-max-width:160px;
+max-width:150px;
+
+word-break:break-word;
+
+white-space:normal;
 
 }
 
 .space-big{
 
-font-size:40px;
+width:72px;
 
-line-height:1;
+height:72px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+filter:drop-shadow(0 4px 3px rgba(170,60,110,.3));
+
+}
+
+.space-big svg{
+
+width:100%;
+
+height:100%;
+
+display:block;
 
 }
 
 .space.start,.space.goal{
-
-width:260px;
-
-height:182px;
 
 background:linear-gradient(160deg,#ffaad4,#ff5fa8);
 
@@ -562,9 +1327,11 @@ box-shadow:
 
 inset 0 3px 6px rgba(255,255,255,.5),
 
-0 6px 0 #c4487a,
+inset 0 -7px 12px rgba(200,60,120,.35),
 
-0 10px 20px rgba(0,0,0,.15);
+0 8px 0 #c4487a,
+
+0 16px 24px rgba(0,0,0,.18);
 
 }
 
@@ -598,7 +1365,7 @@ padding:3px 14px;
 
 .space.active{
 
-transform:var(--tf) scale(1.08);
+transform:scale(1.08);
 
 border-color:#ffd700;
 
@@ -608,9 +1375,9 @@ box-shadow:
 
 0 0 12px rgba(255,255,255,.85),
 
-0 5px 0 #c9a882,
+0 6px 0 #c9a882,
 
-0 8px 16px rgba(0,0,0,.12);
+0 10px 18px rgba(0,0,0,.12);
 
 }
 
@@ -898,6 +1665,106 @@ margin-bottom:10px;
 
 color:#d84c8d;
 
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+}
+
+/* =========================
+   隊伍數量控制
+========================= */
+
+.teamCountRow{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+justify-content:flex-end;
+
+margin-bottom:10px;
+
+}
+
+.teamCountBtn{
+
+width:30px;
+
+height:30px;
+
+border-radius:50%;
+
+border:2px solid #ffd4e8;
+
+background:#fff;
+
+color:#d84c8d;
+
+font-size:18px;
+
+font-weight:900;
+
+line-height:1;
+
+cursor:pointer;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+transition:.2s;
+
+padding:0;
+
+}
+
+.teamCountBtn:hover:not(:disabled){
+
+background:#fff5fa;
+
+border-color:#ff7db4;
+
+}
+
+.teamCountBtn:disabled{
+
+opacity:.35;
+
+cursor:not-allowed;
+
+}
+
+.teamCountLabel{
+
+font-size:14px;
+
+color:#b96f97;
+
+white-space:nowrap;
+
+}
+
+.teamCountLabel strong{
+
+font-size:18px;
+
+color:#d84c8d;
+
+margin:0 2px;
+
+}
+
+.teamInput.hidden,.scoreRow.hidden{
+
+display:none;
+
 }
 
 /* =========================
@@ -949,6 +1816,12 @@ transition:.2s;
 
     flex-shrink:0;
 
+}
+.journeyStatus{
+    font-size:11px;
+    letter-spacing:1px;
+    flex-shrink:0;
+    white-space:nowrap;
 }
 
 .teamInput input:focus{
@@ -1284,14 +2157,6 @@ font-size:34px;
 
 }
 
-.space{
-
-width:240px;
-
-height:168px;
-
-}
-
 }
 /* =========================
    題目全螢幕
@@ -1565,4 +2430,598 @@ color:#d94f8c;
 
 transform:scale(.94);
 
+}
+
+/* ==================== God Overlay ==================== */
+
+#godOverlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.85);
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+z-index:99998;
+
+overflow:hidden;
+
+}
+
+#godOverlay.show{
+
+display:flex;
+
+}
+
+.god-glow{
+
+position:absolute;
+
+width:320px;
+
+height:320px;
+
+border-radius:50%;
+
+background:radial-gradient(circle,rgba(255,215,0,.55) 0%,rgba(255,180,50,.25) 40%,transparent 70%);
+
+animation:godPulse 5s ease-in-out infinite;
+
+}
+
+@keyframes godPulse{
+
+0%,100%{transform:scale(.85);opacity:.6}
+
+50%{transform:scale(1.15);opacity:1}
+
+}
+
+.god-particles{
+
+position:absolute;
+
+inset:0;
+
+overflow:hidden;
+
+}
+
+.god-p{
+
+position:absolute;
+
+bottom:-10px;
+
+width:6px;
+
+height:6px;
+
+border-radius:50%;
+
+background:#ffd700;
+
+opacity:0;
+
+animation:godFloat 2.6s ease-out infinite;
+
+}
+
+@keyframes godFloat{
+
+0%{transform:translateY(0) scale(1);opacity:0}
+
+15%{opacity:.85}
+
+80%{opacity:.5}
+
+100%{transform:translateY(-100vh) scale(.3);opacity:0}
+
+}
+
+.god-center{
+
+position:relative;
+
+z-index:2;
+
+text-align:center;
+
+color:#fff;
+
+}
+
+.god-icon{
+
+width:100px;
+
+height:100px;
+
+margin:0 auto 20px;
+
+background:radial-gradient(circle,#fff8e8 30%,#f5d78e 70%,#e8c86a 100%);
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+animation:godIconIn .8s cubic-bezier(.34,1.56,.64,1) forwards;
+
+box-shadow:0 0 40px rgba(255,215,0,.5),0 0 80px rgba(255,180,50,.25);
+
+}
+
+@keyframes godIconIn{
+
+0%{transform:scale(0);opacity:0}
+
+100%{transform:scale(1);opacity:1}
+
+}
+
+.god-phase1,.god-phase2{
+
+font-size:36px;
+
+font-weight:700;
+
+text-shadow:0 2px 12px rgba(0,0,0,.4);
+
+}
+
+.god-phase2{
+
+font-size:22px;
+
+font-weight:400;
+
+margin-top:8px;
+
+}
+
+/* ==================== Trial Overlay ==================== */
+
+#trialOverlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.9);
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+z-index:99998;
+
+overflow:hidden;
+
+}
+
+#trialOverlay.show{
+
+display:flex;
+
+}
+
+.trial-fog{
+
+position:absolute;
+
+inset:-20%;
+
+background:radial-gradient(ellipse at 30% 50%,rgba(55,65,81,.9) 0%,rgba(30,35,44,.7) 40%,transparent 70%);
+
+animation:trialFogDrift 5s ease-in-out infinite alternate;
+
+}
+
+.trial-fog2{
+
+background:radial-gradient(ellipse at 70% 40%,rgba(75,85,99,.8) 0%,rgba(40,45,55,.6) 45%,transparent 70%);
+
+animation:trialFogDrift2 5.5s ease-in-out infinite alternate;
+
+}
+
+@keyframes trialFogDrift{
+
+0%{transform:translate(-5%,3%) scale(1.05)}
+
+100%{transform:translate(5%,-3%) scale(1.1)}
+
+}
+
+@keyframes trialFogDrift2{
+
+0%{transform:translate(4%,-2%) scale(1.1)}
+
+100%{transform:translate(-4%,4%) scale(1.05)}
+
+}
+
+.trial-lightning{
+
+position:absolute;
+
+inset:0;
+
+opacity:0;
+
+animation:trialFlash 5s ease-in-out infinite;
+
+}
+
+.trial-lightning::before,.trial-lightning::after{
+
+content:"";
+
+position:absolute;
+
+width:3px;
+
+background:rgba(251,191,36,.7);
+
+border-radius:2px;
+
+}
+
+.trial-lightning::before{
+
+left:38%;
+
+top:15%;
+
+height:35px;
+
+transform:rotate(8deg);
+
+box-shadow:0 0 8px rgba(251,191,36,.5);
+
+}
+
+.trial-lightning::after{
+
+left:62%;
+
+top:20%;
+
+height:28px;
+
+transform:rotate(-5deg);
+
+box-shadow:0 0 8px rgba(251,191,36,.5);
+
+}
+
+@keyframes trialFlash{
+
+0%,88%,100%{opacity:0}
+
+90%,94%{opacity:1}
+
+92%{opacity:0}
+
+96%{opacity:.7}
+
+}
+
+.trial-center{
+
+position:relative;
+
+z-index:2;
+
+text-align:center;
+
+color:#fff;
+
+}
+
+.trial-icon{
+
+width:100px;
+
+height:100px;
+
+margin:0 auto 20px;
+
+background:radial-gradient(circle,#6b7280 20%,#4b5563 50%,#2d3748 100%);
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+animation:trialIconIn .7s cubic-bezier(.34,1.56,.64,1) forwards;
+
+box-shadow:0 0 30px rgba(107,114,128,.5),0 0 60px rgba(75,85,99,.3);
+
+}
+
+@keyframes trialIconIn{
+
+0%{transform:scale(0) rotate(-15deg);opacity:0}
+
+100%{transform:scale(1) rotate(0deg);opacity:1}
+
+}
+
+.trial-phase1,.trial-phase2{
+
+font-size:36px;
+
+font-weight:700;
+
+text-shadow:0 2px 12px rgba(0,0,0,.5);
+
+}
+
+.trial-phase2{
+
+font-size:20px;
+
+font-weight:400;
+
+margin-top:8px;
+
+opacity:.85;
+
+}
+
+/* =========================
+   婚姻修復經文 Overlay
+   ========================= */
+
+#repairVerseOverlay{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(160deg,#fff8e7,#fff3cd,#fef9ef);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:99999;
+    overflow:hidden;
+    opacity:0;
+    transition:opacity .7s ease;
+}
+#repairVerseOverlay.show{
+    display:flex;
+    opacity:1;
+}
+.rv-glow{
+    position:absolute;
+    width:500px;height:500px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,215,120,.18),transparent 70%);
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+}
+.rv-particles{
+    position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.rv-p{
+    position:absolute;
+    bottom:-20px;
+    width:5px;height:5px;
+    border-radius:50%;
+    background:rgba(200,170,90,.3);
+    animation:rvFloatUp 6s ease-in infinite;
+}
+@keyframes rvFloatUp{
+    0%{transform:translateY(0) scale(1);opacity:0}
+    15%{opacity:.5}
+    85%{opacity:.3}
+    100%{transform:translateY(-100vh) scale(.4);opacity:0}
+}
+.rv-card{
+    position:relative;
+    max-width:520px;
+    padding:40px 36px;
+    text-align:center;
+    animation:rvEnter .7s ease both;
+}
+@keyframes rvEnter{
+    from{opacity:0;transform:scale(.96)}
+    to{opacity:1;transform:scale(1)}
+}
+.rv-verse{
+    font-size:24px;
+    line-height:1.8;
+    color:#5d4e37;
+    font-weight:500;
+    letter-spacing:.5px;
+}
+.rv-ref{
+    margin-top:18px;
+    font-size:14px;
+    color:#9e8e6e;
+    font-weight:400;
+}
+
+/* =========================
+   試煉失敗烏雲動畫
+   ========================= */
+
+#trialFailOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.92);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:99998;
+    overflow:hidden;
+    opacity:0;
+    transition:opacity .5s ease;
+}
+#trialFailOverlay.show{
+    display:flex;
+    opacity:1;
+}
+.tf-fog{
+    position:absolute;
+    inset:-20%;
+    background:radial-gradient(ellipse at 30% 50%,rgba(55,65,81,.9) 0%,rgba(30,35,44,.7) 40%,transparent 70%);
+    animation:tfFogDrift 5s ease-in-out infinite alternate;
+}
+.tf-fog2{
+    background:radial-gradient(ellipse at 70% 40%,rgba(75,85,99,.8) 0%,rgba(40,45,55,.6) 45%,transparent 70%);
+    animation:tfFogDrift2 5.5s ease-in-out infinite alternate;
+}
+@keyframes tfFogDrift{
+    0%{transform:translate(-5%,3%) scale(1.05)}
+    100%{transform:translate(5%,-3%) scale(1.1)}
+}
+@keyframes tfFogDrift2{
+    0%{transform:translate(4%,-2%) scale(1.1)}
+    100%{transform:translate(-4%,4%) scale(1.05)}
+}
+.tf-lightning{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    animation:tfFlash 5s ease-in-out infinite;
+}
+.tf-lightning::before,.tf-lightning::after{
+    content:"";
+    position:absolute;
+    width:3px;
+    background:rgba(251,191,36,.7);
+    border-radius:2px;
+}
+.tf-lightning::before{
+    left:38%;top:15%;height:35px;
+    transform:rotate(8deg);
+    box-shadow:0 0 8px rgba(251,191,36,.5);
+}
+.tf-lightning::after{
+    left:62%;top:20%;height:28px;
+    transform:rotate(-5deg);
+    box-shadow:0 0 8px rgba(251,191,36,.5);
+}
+@keyframes tfFlash{
+    0%,88%,100%{opacity:0}
+    90%,94%{opacity:1}
+    92%{opacity:0}
+    96%{opacity:.7}
+}
+.tf-center{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    color:#fff;
+}
+.tf-icon{
+    width:100px;height:100px;
+    margin:0 auto 20px;
+    background:radial-gradient(circle,#6b7280 20%,#4b5563 50%,#2d3748 100%);
+    border-radius:50%;
+    display:flex;justify-content:center;align-items:center;
+    font-size:48px;
+    box-shadow:0 0 30px rgba(0,0,0,.5);
+}
+.tf-phase1{
+    font-size:36px;
+    font-weight:700;
+    margin-bottom:12px;
+    text-shadow:0 0 20px rgba(0,0,0,.5);
+}
+.tf-phase2{
+    font-size:18px;
+    opacity:.8;
+}
+
+/* =========================
+   祝福前導動畫（終點前）
+   ========================= */
+
+#blessingLeadOverlay{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(160deg,#fff8e7,#fff3cd,#fef9ef);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:99999;
+    overflow:hidden;
+    opacity:0;
+    transition:opacity .6s ease;
+}
+#blessingLeadOverlay.show{
+    display:flex;
+    opacity:1;
+}
+.bl-glow{
+    position:absolute;
+    width:600px;height:600px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,215,120,.22),transparent 70%);
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    animation:blPulse 3s ease-in-out infinite;
+}
+@keyframes blPulse{
+    0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6}
+    50%{transform:translate(-50%,-50%) scale(1.08);opacity:1}
+}
+.bl-particles{
+    position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.bl-p{
+    position:absolute;
+    bottom:-20px;
+    width:5px;height:5px;
+    border-radius:50%;
+    background:rgba(200,170,90,.3);
+    animation:blFloatUp 7s ease-in infinite;
+}
+@keyframes blFloatUp{
+    0%{transform:translateY(0) scale(1);opacity:0}
+    15%{opacity:.5}
+    85%{opacity:.3}
+    100%{transform:translateY(-100vh) scale(.4);opacity:0}
+}
+.bl-text{
+    position:relative;
+    font-size:28px;
+    line-height:1.7;
+    color:#6d5a3a;
+    font-weight:500;
+    letter-spacing:1px;
+    text-align:center;
+    max-width:500px;
+    padding:0 24px;
+    animation:blTextEnter .8s ease both;
+    text-shadow:0 0 20px rgba(255,215,120,.3);
+}
+@keyframes blTextEnter{
+    from{opacity:0;transform:scale(.95)}
+    to{opacity:1;transform:scale(1)}
 }
