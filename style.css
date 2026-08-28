@@ -324,8 +324,6 @@ position:relative;
 
     opacity:.32;
 
-    filter:saturate(.75);
-
     user-select:none;
 
     -webkit-user-select:none;
@@ -343,7 +341,6 @@ width:40px;height:16px;
 background:radial-gradient(ellipse at 50% 100%,#7cb85a 0%,#5da03a 60%,transparent 100%);
 border-radius:50% 50% 40% 40%;
 opacity:.45;
-filter:saturate(.8);
 }
 .deco-grass.sm{width:28px;height:12px;opacity:.35;}
 .deco-grass.lg{width:56px;height:20px;opacity:.5;}
@@ -354,8 +351,7 @@ filter:saturate(.8);
 .deco-flowers{
 position:absolute;
 display:flex;gap:3px;align-items:flex-end;
-opacity:.5;filter:saturate(.85);
-}
+opacity:.5;}
 .deco-flowers .petal{
 width:10px;height:10px;border-radius:50%;
 box-shadow:inset 0 -1px 2px rgba(0,0,0,.1);
@@ -381,8 +377,7 @@ background:radial-gradient(ellipse at 45% 40%,#8fd46e,#5cb83a,#3d8c24);
 border-radius:50%;
 border:1.5px solid rgba(60,120,30,.2);
 box-shadow:inset 0 -3px 6px rgba(0,0,0,.1),0 2px 4px rgba(0,0,0,.08);
-opacity:.5;filter:saturate(.75);
-}
+opacity:.5;}
 .deco-bush.sm{width:30px;height:20px;opacity:.4;}
 .deco-bush.lg{width:60px;height:36px;opacity:.55;}
 
@@ -407,7 +402,6 @@ opacity:.35;
 position:absolute;
 font-size:16px;
 opacity:.3;
-filter:saturate(.7);
 }
 
 /* =========================
@@ -417,14 +411,6 @@ filter:saturate(.7);
 position:absolute;
 font-size:14px;
 opacity:.35;
-animation:butterfly-float 6s ease-in-out infinite;
-}
-.deco-butterfly:nth-child(odd){animation-duration:7s;animation-delay:-2s;}
-@keyframes butterfly-float{
-0%,100%{transform:translate(0,0) rotate(0deg);}
-25%{transform:translate(8px,-6px) rotate(5deg);}
-50%{transform:translate(-4px,-10px) rotate(-3deg);}
-75%{transform:translate(6px,-4px) rotate(4deg);}
 }
 
 /* =========================
@@ -434,7 +420,6 @@ animation:butterfly-float 6s ease-in-out infinite;
 position:absolute;
 font-size:18px;
 opacity:.35;
-filter:saturate(.8);
 }
 
 /* =========================
