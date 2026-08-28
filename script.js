@@ -478,6 +478,136 @@ const board = document.getElementById("board");
 const roadLayer = document.getElementById("roadLayer");
 
 // -------------------------------
+// 靜態自然裝飾整合層（Canvas）
+// -------------------------------
+// 將「純視覺、非互動」的小型裝飾（花草/灌木/石頭/蝴蝶/落葉/蘑菇/emoji）
+// 於啟動時一次性繪製到單一 <canvas>，再從 DOM 移除，大幅降低節點數與重繪負擔。
+// 詳細場景（樹木/小屋/涼亭/噴泉/長椅/路燈/圍籬）保留為靜態 DOM。
+function rasterizeDecorations(){
+    const layer=document.getElementById("decoLayer");
+    if(!layer) return;
+    const W=layer.clientWidth, H=layer.clientHeight;
+    if(!W||!H) return;
+    const SCALE=Math.min(Math.max(window.devicePixelRatio||1,1),2);
+    const cv=document.createElement("canvas");
+    cv.width=Math.round(W*SCALE);
+    cv.height=Math.round(H*SCALE);
+    cv.style.cssText="position:absolute;left:0;top:0;width:"+W+"px;height:"+H+"px;pointer-events:none;display:block;";
+    const ctx=cv.getContext("2d");
+    ctx.scale(SCALE,SCALE);
+
+    const EMOJI_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Twemoji Mozilla",sans-serif';
+    const petalColor={
+        r:["#ffb3c6","#ff6b8a"],
+        y:["#fff3a3","#ffd23f"],
+        p:["#e0b3ff","#c77dff"],
+        w:["#ffffff","#e8e0f0"],
+        b:["#b3d9ff","#6bb5ff"]
+    };
+
+    function ell(px,py,w,h,stops,x0,y0){
+        const g=ctx.createRadialGradient(x0,y0,0,x0,y0,Math.max(w,h)*1.4);
+        for(const s of stops) g.addColorStop(s[0],s[1]);
+        ctx.fillStyle=g;
+        ctx.beginPath();
+        ctx.ellipse(px,py,w/2,h/2,0,0,Math.PI*2);
+        ctx.fill();
+    }
+
+    // 收集要消除的簡單裝飾
+    const items=Array.prototype.slice.call(
+        layer.querySelectorAll(".deco, .deco-grass, .deco-flowers, .deco-bush, .deco-stone, .deco-leaf, .deco-butterfly, .deco-mushroom"));
+
+    for(const el of items){
+        const cls=el.className;
+        const x=el.offsetLeft, y=el.offsetTop;
+
+        // 花叢：petals + stem（讀取 flex 實際排版）
+        if(cls.indexOf("deco-flowers")>-1){
+            ctx.globalAlpha=.5;
+            for(const ch of el.children){
+                const cx=x+ch.offsetLeft, cy=y+ch.offsetTop;
+                const cw=ch.offsetWidth, chh=ch.offsetHeight;
+                const cc=ch.className;
+                if(ch.classList.contains("stem")){
+                    const g=ctx.createLinearGradient(cx,cy,cx,cy+chh);
+                    g.addColorStop(0,"#6aa84f"); g.addColorStop(1,"#4a8630");
+                    ctx.fillStyle=g;
+                    ctx.fillRect(cx,cy,cw,chh);
+                }else{
+                    const col=petalColor[cc[cc.length-1]]||petalColor.w;
+                    const gx=cx+cw*0.4, gy=cy+chh*0.35;
+                    const g=ctx.createRadialGradient(gx,gy,0,gx,gy,Math.max(cw,chh)*1.5);
+                    g.addColorStop(0,col[0]); g.addColorStop(1,col[1]);
+                    ctx.fillStyle=g;
+                    ctx.beginPath();
+                    ctx.arc(cx+cw/2,cy+chh/2,Math.max(cw,chh)/2,0,Math.PI*2);
+                    ctx.fill();
+                }
+            }
+            ctx.globalAlpha=1;
+            continue;
+        }
+
+        // 灌木
+        if(cls.indexOf("deco-bush")>-1){
+            const op=cls.indexOf("sm")>-1?.4:cls.indexOf("lg")>-1?.55:.5;
+            ctx.globalAlpha=op;
+            ell(x+w2(el),y+h2(el),el.offsetWidth,el.offsetHeight,[[0,"#8fd46e"],[.5,"#5cb83a"],[1,"#3d8c24"]],x+el.offsetWidth*.45,y+el.offsetHeight*.4);
+            ctx.globalAlpha=1;
+            continue;
+        }
+        // 石頭
+        if(cls.indexOf("deco-stone")>-1){
+            const op=cls.indexOf("sm")>-1?.28:cls.indexOf("lg")>-1?.4:.35;
+            ctx.globalAlpha=op;
+            ell(x+w2(el),y+h2(el),el.offsetWidth,el.offsetHeight,[[0,"#d4cfc8"],[.5,"#b0a898"],[1,"#8a8078"]],x+el.offsetWidth*.4,y+el.offsetHeight*.35);
+            ctx.globalAlpha=1;
+            continue;
+        }
+        // 草叢
+        if(cls.indexOf("deco-grass")>-1){
+            const op=cls.indexOf("sm")>-1?.35:cls.indexOf("lg")>-1?.5:.45;
+            ctx.globalAlpha=op;
+            ell(x+w2(el),y+h2(el),el.offsetWidth,el.offsetHeight,[[0,"#7cb85a"],[.6,"#5da03a"],[1,"rgba(93,160,58,0)"]],x+el.offsetWidth/2,y+el.offsetHeight);
+            ctx.globalAlpha=1;
+            continue;
+        }
+
+        // emoji 型裝飾
+        if(el.children.length===0){
+            let op=.32, fs=parseFloat(el.style.fontSize)||16;
+            if(cls.indexOf("deco-leaf")>-1) op=.3;
+            else if(cls.indexOf("deco-butterfly")>-1) op=.35;
+            else if(cls.indexOf("deco-mushroom")>-1) op=.35;
+            let rot=0;
+            const t=el.style.transform||"";
+            const m=t.match(/rotate\(([-\d.]+)deg\)/);
+            if(m) rot=parseFloat(m[1]);
+            const cx=x+el.offsetWidth/2, cy=y+el.offsetHeight/2;
+            ctx.save();
+            ctx.globalAlpha=op;
+            ctx.translate(cx,cy);
+            if(rot) ctx.rotate(rot*Math.PI/180);
+            ctx.font=fs+"px "+EMOJI_FONT;
+            ctx.textAlign="center";
+            ctx.textBaseline="middle";
+            ctx.fillText(el.textContent||"",0, Math.round(fs*0.06));
+            ctx.restore();
+        }
+    }
+
+    // 由 DOM 移除簡單裝飾，僅保留場景（樹木等）
+    for(const el of items) el.parentNode.removeChild(el);
+
+    // 將 canvas 置於圖層最底（場景之後）
+    layer.insertBefore(cv, layer.firstChild);
+}
+
+function w2(el){ return el.offsetWidth/2; }
+function h2(el){ return el.offsetHeight/2; }
+
+// -------------------------------
 // 建立格子
 // -------------------------------
 
@@ -2181,6 +2311,8 @@ setZoom(viewScale*Math.exp(-e.deltaY*0.002),lp.x,lp.y);
 // -------------------------------
 
 buildBoard();
+
+rasterizeDecorations();
 
 drawRoads();
 
