@@ -296,6 +296,8 @@ position:relative;
 
     contain:content;
 
+    z-index:3;
+
 }
 
 /* =========================
