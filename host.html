@@ -89,7 +89,7 @@ h1{
 
     <!-- Row 3: 工具列 -->
     <button id="cheerBtn" class="r3"><span class="btn-icon">🎉</span><span class="btn-label">歡呼</span></button>
-    <button id="bgmBtn" class="r3"><span class="btn-icon">🔇</span><span class="btn-label">暫停 BGM</span></button>
+    <button id="bgmBtn" class="r3"><span class="btn-icon">🎵</span><span class="btn-label">播放 BGM</span></button>
     <button id="qBtn" class="r3"><span class="btn-icon">❓</span><span class="btn-label">顯示題目</span></button>
     <button id="rulesBtn" class="r3"><span class="btn-icon">📋</span><span class="btn-label">規則</span></button>
 
@@ -143,8 +143,8 @@ document.getElementById("bgmBtn").onclick = () => {
     const icon = document.querySelector("#bgmBtn .btn-icon");
     const label = document.querySelector("#bgmBtn .btn-label");
     const isOn = document.getElementById("bgmBtn").classList.toggle("bgm-on");
-    icon.textContent = isOn ? "🎵" : "🔇";
-    label.textContent = isOn ? "播放 BGM" : "暫停 BGM";
+    icon.textContent = isOn ? "🔇" : "🎵";
+    label.textContent = isOn ? "暫停 BGM" : "播放 BGM";
 };
 document.getElementById("qBtn").onclick = () => sendCommand("showq");
 document.getElementById("rulesBtn").onclick = () => sendCommand("rules");

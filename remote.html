@@ -214,10 +214,6 @@ function enableShakeDetection() {
     console.log("甩動偵測已啟用");
 }
 
-function disableShakeDetection() {
-    window.removeEventListener("devicemotion", handleShakeEvent);
-    shakeEnabled = false;
-}
 
 rollBtn.onclick = async () => {
     console.log("按鈕被按了");

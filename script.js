@@ -17,6 +17,8 @@ const applauseSound = new Audio("Applause.mp3");
 
 function playConfetti() {
 
+    if (typeof confetti === "undefined") return;
+
     const myConfetti = confetti.create(null, {
         resize: true,
         useWorker: true
@@ -52,7 +54,18 @@ onValue(ref(db, "remote/roll"), (snapshot) => {
     }
 
 });
+
+// host/* 首次載入防護：onValue 訂閱時會立刻以現值觸發一次，
+// 若該值殘留為 true 會誤觸發；比照 remote/roll 的 isFirstRollLoad，
+// 每個 host 路徑第一次收到現值時忽略，之後的 true 才觸發。
+const hostFirstLoad = new Set();
+
 onValue(ref(db, "host/start"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/start")) {
+        hostFirstLoad.add("host/start");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -63,6 +76,11 @@ onValue(ref(db, "host/start"), (snapshot) => {
 });
 onValue(ref(db, "host/score1"), (snapshot) => {
 
+    if (!hostFirstLoad.has("host/score1")) {
+        hostFirstLoad.add("host/score1");
+        return;
+    }
+
     if (snapshot.val() === true) {
 
         document.getElementById("correctBtn").click();
@@ -71,6 +89,11 @@ onValue(ref(db, "host/score1"), (snapshot) => {
 
 });
 onValue(ref(db, "host/score2"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/score2")) {
+        hostFirstLoad.add("host/score2");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -81,6 +104,11 @@ onValue(ref(db, "host/score2"), (snapshot) => {
 });
 onValue(ref(db, "host/close"), (snapshot) => {
 
+    if (!hostFirstLoad.has("host/close")) {
+        hostFirstLoad.add("host/close");
+        return;
+    }
+
     if (snapshot.val() === true) {
 
         document.getElementById("closeQuestionBtn").click();
@@ -89,6 +117,11 @@ onValue(ref(db, "host/close"), (snapshot) => {
 
 });
 onValue(ref(db, "host/next"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/next")) {
+        hostFirstLoad.add("host/next");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -99,6 +132,11 @@ onValue(ref(db, "host/next"), (snapshot) => {
 });
 onValue(ref(db, "host/undo"), (snapshot) => {
 
+    if (!hostFirstLoad.has("host/undo")) {
+        hostFirstLoad.add("host/undo");
+        return;
+    }
+
     if (snapshot.val() === true) {
 
         document.getElementById("undoBtn").click();
@@ -108,6 +146,11 @@ onValue(ref(db, "host/undo"), (snapshot) => {
 });
 onValue(ref(db, "host/winner"), (snapshot) => {
 
+    if (!hostFirstLoad.has("host/winner")) {
+        hostFirstLoad.add("host/winner");
+        return;
+    }
+
     if (snapshot.val() === true) {
 
         document.getElementById("winnerBtn").click();
@@ -116,6 +159,11 @@ onValue(ref(db, "host/winner"), (snapshot) => {
 
 });
 onValue(ref(db, "host/cheer"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/cheer")) {
+        hostFirstLoad.add("host/cheer");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -129,6 +177,11 @@ onValue(ref(db, "host/cheer"), (snapshot) => {
 });
 onValue(ref(db, "host/bgm"), (snapshot) => {
 
+    if (!hostFirstLoad.has("host/bgm")) {
+        hostFirstLoad.add("host/bgm");
+        return;
+    }
+
     if (snapshot.val() === true) {
 
         document.getElementById("musicBtn").click();
@@ -137,6 +190,11 @@ onValue(ref(db, "host/bgm"), (snapshot) => {
 
 });
 onValue(ref(db, "host/roll"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/roll")) {
+        hostFirstLoad.add("host/roll");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -147,6 +205,11 @@ onValue(ref(db, "host/roll"), (snapshot) => {
 });
 onValue(ref(db, "host/rules"), (snapshot) => {
 
+    if (!hostFirstLoad.has("host/rules")) {
+        hostFirstLoad.add("host/rules");
+        return;
+    }
+
     if (snapshot.val() === true) {
 
         document.getElementById("rulesBtn").click();
@@ -154,7 +217,26 @@ onValue(ref(db, "host/rules"), (snapshot) => {
     }
 
 });
+onValue(ref(db, "host/showq"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/showq")) {
+        hostFirstLoad.add("host/showq");
+        return;
+    }
+
+    if (snapshot.val() === true) {
+
+        document.getElementById("qBtn").click();
+
+    }
+
+});
 onValue(ref(db, "host/trialFail"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/trialFail")) {
+        hostFirstLoad.add("host/trialFail");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -164,6 +246,11 @@ onValue(ref(db, "host/trialFail"), (snapshot) => {
 
 });
 onValue(ref(db, "host/repair"), (snapshot) => {
+
+    if (!hostFirstLoad.has("host/repair")) {
+        hostFirstLoad.add("host/repair");
+        return;
+    }
 
     if (snapshot.val() === true) {
 
@@ -192,15 +279,12 @@ const BOARD_H = 1650;
 // ───────────────────────────────
 const PANEL_L = 60, PANEL_T = 60;          // 底層面板左上（#boardGround）
 const PANEL_W = 2280, PANEL_H = 1530;      // 底層面板尺寸（固定世界邊界）
-const PANEL_R = PANEL_L + PANEL_W;         // 2340
-const PANEL_B = PANEL_T + PANEL_H;         // 1590
 
 const CIRCLE_R = 105;                      // 普通圓形棋盤格半徑（直徑 210）
 const BIG_R    = 120;                      // START / LOVE 半徑（直徑 240）
 const S_MARGIN = 80;                       // 圓形格外緣距面板邊界的空白
 
 const S_COLS = 6;                          // 每列站點數
-const S_ROWS = 5;                          // 站點列數（5×6 = 30 站）
 const HX = 330;                            // 水平中心間距（圓間保有道路空間）
 const VY = 295;                            // 垂直中心間距
 
@@ -309,6 +393,7 @@ const repairVerses = [
     {text:"「愛弟兄，要彼此親熱；恭敬人，要彼此推讓。」",ref:"羅馬書 12:10"}
 ];
 let usedRepairVerses=[];
+let repairVerseTimer=null;
 
 function pickRepairVerse(){
     const available=repairVerses.filter(v=>!usedRepairVerses.includes(v));
@@ -332,7 +417,8 @@ function showRepairVerse(){
     playEventSound("trial");
 
     // 8 秒後進入第二階段
-    setTimeout(()=>{
+    repairVerseTimer=setTimeout(()=>{
+        repairVerseTimer=null;
         // 第一階段結束
         stopEventSound("trial");
         tfEl.classList.remove("show");
@@ -349,6 +435,7 @@ function showRepairVerse(){
 }
 
 function hideRepairVerse(){
+    if(repairVerseTimer){ clearTimeout(repairVerseTimer); repairVerseTimer=null; }
     // 關閉經文畫面
     const rvEl=document.getElementById("repairVerseOverlay");
     rvEl.classList.remove("show");
@@ -372,7 +459,6 @@ function hideRepairVerse(){
 // 特殊事件格已觸發追蹤（全域）
 // -------------------------------
 
-const usedEventSpaces=new Set();
 
 // -------------------------------
 // 祝福前導動畫（終點前強制遇見神用）
@@ -391,40 +477,6 @@ function showBlessingLead(){
 // 道路
 // -------------------------------
 
-const roads = [
-
-[0,1],
-[1,2],
-[2,3],
-[3,4],
-[4,5],
-[5,6],
-[6,7],
-[7,8],
-[8,9],
-[9,10],
-[10,11],
-[11,12],
-[12,13],
-[13,14],
-[14,15],
-[15,16],
-[16,17],
-[17,18],
-[18,19],
-[19,20],
-[20,21],
-[21,22],
-[22,23],
-[23,24],
-[24,25],
-[25,26],
-[26,27],
-[27,28],
-[28,29],
-[29,30]
-
-];
 
 // -------------------------------
 // 遊戲資料
@@ -436,6 +488,7 @@ const teams = [
 name:"第一隊",
 position:0,
 score:0,
+entered:false,
 journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[]}
 },
 
@@ -443,6 +496,7 @@ journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[
 name:"第二隊",
 position:0,
 score:0,
+entered:false,
 journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[]}
 },
 
@@ -450,6 +504,7 @@ journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[
 name:"第三隊",
 position:0,
 score:0,
+entered:false,
 journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[]}
 },
 
@@ -457,6 +512,7 @@ journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[
 name:"第四隊",
 position:0,
 score:0,
+entered:false,
 journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[]}
 },
 
@@ -464,6 +520,7 @@ journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[
 name:"第五隊",
 position:0,
 score:0,
+entered:false,
 journey:{hasMetGod:false,hasTrial:false,usedGodQuestions:[],usedTrialQuestions:[]}
 }
 
@@ -927,7 +984,6 @@ function setActiveTeamCount(n) {
     }
 
     updateTeamVisibility();
-    updateJourneyDisplay();
 
     placePieces();
 
@@ -971,16 +1027,6 @@ function updateTeamVisibility() {
 
 }
 
-function updateJourneyDisplay(){
-    for(let i=0;i<5;i++){
-        const el=document.getElementById("journey"+i);
-        if(!el) continue;
-        const t=teams[i];
-        const god=t.journey.hasMetGod?"✝️✅":"✝️❌";
-        const trial=t.journey.hasTrial?"🌑✅":"🌑❌";
-        el.textContent=god+" "+trial;
-    }
-}
 
 // -------------------------------
 // 放置棋子
@@ -1072,7 +1118,8 @@ function updateNames(){
 
 for(let i=0;i<5;i++){
 
-teams[i].name=document.getElementById("team"+i).value;
+const _v=document.getElementById("team"+i).value;
+if(_v.trim()!==""){ teams[i].name=_v; }
 
 document.getElementById("scoreName"+i).textContent=teams[i].name;
 
@@ -1098,7 +1145,6 @@ teams[currentTeam].name;
 // -------------------------------
 
 
-
 // -------------------------------
 // 骰子
 // -------------------------------
@@ -1113,6 +1159,12 @@ const endSound = new Audio("end.mp3");
 
 endSound.volume = 1.0;
 
+endSound.onended = () => {
+    if (resumeBgm) {
+        bgm.play().catch(() => {});
+    }
+};
+
 heartSound.loop = true;
 heartSound.volume = 0.8;
 
@@ -1124,10 +1176,14 @@ const winnerSound = new Audio("winner.mp3");
 
 winnerSound.volume = 1.0;
 
-const godEventSound = new Audio("assets/audio/god-event.mp3");
+// 暫代音效：assets/audio/god-event.mp3 不存在（404），先以 heart.mp3 暫代；
+// 待 Peng 提供真實 god/trial 音檔後改回 assets/audio/ 路徑。
+const godEventSound = new Audio("heart.mp3");
 godEventSound.volume = 0.6;
 
-const trialEventSound = new Audio("assets/audio/trial-event.mp3");
+// 暫代音效：assets/audio/trial-event.mp3 不存在（404），先以 end.mp3 暫代；
+// 待 Peng 提供真實 god/trial 音檔後改回 assets/audio/ 路徑。
+const trialEventSound = new Audio("end.mp3");
 trialEventSound.volume = 0.6;
 
 function playEventSound(type){
@@ -1160,34 +1216,15 @@ const correctBtn=document.getElementById("correctBtn");
 
 const excellentBtn=document.getElementById("excellentBtn");
 
+// 題目按鈕在頂層綁定一次（第一次出題前主持人遙控也能生效；
+// showQuestion 內不再重複綁定，forceGod/forceTrial 流程內仍會暫時覆寫）
+closeQuestionBtn.onclick=()=>{ questionOverlay.classList.remove("show"); };
+startAnswerBtn.onclick=()=>{ questionOverlay.classList.remove("show"); startCountdown(); };
+correctBtn.onclick=()=>{ addScore(currentTeam,1); questionOverlay.classList.remove("show"); };
+excellentBtn.onclick=()=>{ addScore(currentTeam,2); questionOverlay.classList.remove("show"); };
+
 let moving=false;
 let history = [];
-const usedQuestions = {};
-
-function getRandomQuestion(type){
-
-    if(!usedQuestions[type]){
-        usedQuestions[type] = [];
-    }
-
-    const allQuestions = questions[type];
-
-    if(usedQuestions[type].length >= allQuestions.length){
-        usedQuestions[type] = [];
-    }
-
-    const available = allQuestions.filter(
-        q => !usedQuestions[type].includes(q)
-    );
-
-    const q = available[
-        Math.floor(Math.random()*available.length)
-    ];
-
-    usedQuestions[type].push(q);
-
-    return q;
-}
 
 // -------------------------------
 // 終點前補完：強制完成缺失旅程
@@ -1200,22 +1237,6 @@ function pickRandomFrom(arr, used){
         : arr[Math.floor(Math.random()*arr.length)];
 }
 
-function forceTrial(team){
-    return new Promise(async resolve=>{
-        await showTrialAnimation();
-        const tq=pickRandomFrom(trialQuestions, team.journey.usedTrialQuestions);
-        team.journey.usedTrialQuestions.push(tq);
-        team.journey.hasTrial=true;
-        updateJourneyDisplay();
-        questionBox.textContent="🌑 婚姻試煉\n"+tq;
-        overlayQuestion.textContent="🌑 婚姻試煉\n"+tq;
-        questionOverlay.classList.add("show");
-        const handler=()=>{ resolve(); };
-        closeQuestionBtn.onclick=()=>{ questionOverlay.classList.remove("show"); handler(); };
-        correctBtn.onclick=()=>{ addScore(currentTeam,1); questionOverlay.classList.remove("show"); handler(); };
-        excellentBtn.onclick=()=>{ addScore(currentTeam,2); questionOverlay.classList.remove("show"); handler(); };
-    });
-}
 
 function forceGod(team){
     return new Promise(async resolve=>{
@@ -1223,7 +1244,6 @@ function forceGod(team){
         const gq=pickRandomFrom(godQuestions, team.journey.usedGodQuestions);
         team.journey.usedGodQuestions.push(gq);
         team.journey.hasMetGod=true;
-        updateJourneyDisplay();
         questionBox.textContent="✝️ 遇見神\n"+gq;
         overlayQuestion.textContent="✝️ 遇見神\n"+gq;
         questionOverlay.classList.add("show");
@@ -1241,34 +1261,25 @@ function forceGod(team){
 function pickDiceValue(team){
     const pos=team.position;
     const maxStep=spaces.length-1-pos;
-    const candidates=[];
-    for(let s=1;s<=6;s++){
-        if(s>maxStep) break;
-        candidates.push(s);
+    if(maxStep<=0) return 1;
+    // 平常就是純隨機 1-6
+    let v=Math.floor(Math.random()*Math.min(6,maxStep))+1;
+    // 保底強制骰：只有在隨機點數會跳過某一種「剩下所有的」神格／試煉格時，
+    // 才強制改成落在最近的那一格，保證每隊在終點前各經歷一次。
+    // 兩種同時要保底時選最近的那一格，另一種仍在前方，不會漏掉。
+    const targets=[];
+    if(!team.journey.hasMetGod){
+        const rem=spaces.map((sp,i)=>sp.blessing?i:-1).filter(i=>i>pos);
+        if(rem.length && pos+v>rem[rem.length-1]) targets.push(rem[0]);
     }
-    if(candidates.length<=1) return candidates[0]||1;
-
-    const otherPositions=[];
-    for(let i=0;i<activeTeamCount;i++){
-        if(i===currentTeam) continue;
-        otherPositions.push(teams[i].position);
+    if(!team.journey.hasTrial){
+        const rem=spaces.map((sp,i)=>sp.trial?i:-1).filter(i=>i>pos);
+        if(rem.length && pos+v>rem[rem.length-1]) targets.push(rem[0]);
     }
-
-    const scored=candidates.map(s=>{
-        const land=pos+s;
-        let penalty=0;
-        for(const op of otherPositions){
-            const dist=Math.abs(land-op);
-            if(dist===0) penalty+=3;
-            else if(dist<=2) penalty+=1;
-        }
-        if(land>=spaces.length-1) penalty+=0.5;
-        return {s,penalty};
-    });
-
-    const minPenalty=Math.min(...scored.map(x=>x.penalty));
-    const best=scored.filter(x=>x.penalty===minPenalty);
-    return best[Math.floor(Math.random()*best.length)].s;
+    if(targets.length){
+        v=Math.min(...targets)-pos;
+    }
+    return v;
 }
 
 rollBtn.addEventListener("click",()=>{
@@ -1316,49 +1327,6 @@ movePiece(finalValue);
 },700);
 
 });
-
-// -------------------------------
-// 棋子移動
-// -------------------------------
-
-function movePiece(step){
-
-const team=teams[currentTeam];
-
-let target=team.position+step;
-
-if(target>=spaces.length){
-
-target=spaces.length-1;
-
-}
-
-moveStep(team.position,target,async ()=>{
-
-const startPos=team.position;
-team.position=target;
-
-// LOVE 終點前：只強制遇見神，不再強制試煉
-if(target>=spaces.length-1){
-    if(!team.journey.hasMetGod){
-        team.position=startPos;
-        await showBlessingLead();
-        await forceGod(team);
-        placePieces();
-        moving=false;
-        return;
-    }
-}
-
-await showQuestion();
-
-placePieces();
-
-moving=false;
-
-});
-
-}
 
 // -------------------------------
 // 一格一格移動
@@ -1445,52 +1413,12 @@ function showTrialAnimation(){
 // -------------------------------
 
 async function showQuestion(){
-closeQuestionBtn.onclick=()=>{
-
-questionOverlay.classList.remove("show");
-
-};
-closeQuestionBtn.onclick=()=>{
-
-questionOverlay.classList.remove("show");
-
-};
-
-startAnswerBtn.onclick=()=>{
-
-startCountdown();
-
-};
-startAnswerBtn.onclick=()=>{
-
-questionOverlay.classList.remove("show");
-
-startCountdown();
-
-};
-correctBtn.onclick=()=>{
-
-addScore(currentTeam,1);
-
-questionOverlay.classList.remove("show");
-
-};
-excellentBtn.onclick=()=>{
-
-addScore(currentTeam,2);
-
-questionOverlay.classList.remove("show");
-
-};
-
 const team = teams[currentTeam];
 
 const currentSpace = spaces[team.position];
-const spaceIdx = team.position;
 
 if(currentSpace.blessing){
-    if(!team.journey.hasMetGod && !usedEventSpaces.has(spaceIdx)){
-        usedEventSpaces.add(spaceIdx);
+    if(!team.journey.hasMetGod){
         await showGodAnimation();
         const available=godQuestions.filter(q=>!team.journey.usedGodQuestions.includes(q));
         const gq=available.length>0
@@ -1498,7 +1426,6 @@ if(currentSpace.blessing){
             : godQuestions[Math.floor(Math.random()*godQuestions.length)];
         team.journey.usedGodQuestions.push(gq);
         team.journey.hasMetGod=true;
-        updateJourneyDisplay();
         questionBox.textContent="✝️ 遇見神\n"+gq;
         overlayQuestion.textContent="✝️ 遇見神\n"+gq;
         questionOverlay.classList.add("show");
@@ -1507,8 +1434,7 @@ if(currentSpace.blessing){
 }
 
 if(currentSpace.trial){
-    if(!team.journey.hasTrial && !usedEventSpaces.has(spaceIdx)){
-        usedEventSpaces.add(spaceIdx);
+    if(!team.journey.hasTrial){
         await showTrialAnimation();
         const available=trialQuestions.filter(q=>!team.journey.usedTrialQuestions.includes(q));
         const tq=available.length>0
@@ -1516,7 +1442,6 @@ if(currentSpace.trial){
             : trialQuestions[Math.floor(Math.random()*trialQuestions.length)];
         team.journey.usedTrialQuestions.push(tq);
         team.journey.hasTrial=true;
-        updateJourneyDisplay();
         questionBox.textContent="🌑 婚姻試煉\n"+tq;
         overlayQuestion.textContent="🌑 婚姻試煉\n"+tq;
         questionOverlay.classList.add("show");
@@ -1590,7 +1515,10 @@ document
 .getElementById("countdownBtn")
 .addEventListener("click",startCountdown);
 
+let countdownTimer=null;
+
 function startCountdown(){
+    if(countdownTimer){ clearInterval(countdownTimer); countdownTimer=null; }
     resumeBgm = !bgm.paused;
 
 if (resumeBgm) {
@@ -1605,7 +1533,7 @@ overlay.classList.add("show");
 
 countdownNumber.textContent=time;
 
-const timer=setInterval(()=>{
+countdownTimer=setInterval(()=>{
 
 time--;
 
@@ -1615,16 +1543,11 @@ countdownNumber.textContent=time;
 
 }else{
 
-clearInterval(timer);
+clearInterval(countdownTimer);
+countdownTimer=null;
 heartSound.pause();
 heartSound.currentTime = 0;
 endSound.currentTime = 0;
-
-endSound.onended = () => {
-    if (resumeBgm) {
-        bgm.play().catch(() => {});
-    }
-};
 
 endSound.play().catch(() => {});
 countdownNumber.textContent="時間到！";
@@ -1672,7 +1595,6 @@ alert(
 // (加入終點判斷)
 // -------------------------------
 
-const originalMovePiece=movePiece;
 
 movePiece=function(step){
 
@@ -2187,7 +2109,6 @@ drawRoads();
 placePieces();
 
 updateTeamVisibility();
-updateJourneyDisplay();
 
 updateNames();
 
@@ -2390,6 +2311,7 @@ dice.textContent = state.dice;
         teams[index].score = team.score;
         teams[index].name = team.name;
         teams[index].entered = team.entered;
+        if(team.journey){ teams[index].journey = JSON.parse(JSON.stringify(team.journey)); }
     });
 
     // 更新棋子位置

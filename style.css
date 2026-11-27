@@ -9,13 +9,16 @@
     box-sizing:border-box;
 }
 
+html{
+    background:#efe4cf;
+}
+
 html,
 body{
     width:100%;
     height:100%;
     overflow:hidden;
     font-family:"Noto Sans TC",sans-serif;
-    background:#efe4cf;
 }
 
 /* =========================
@@ -296,6 +299,8 @@ position:relative;
 
     contain:content;
 
+    z-index:3;
+
 }
 
 /* =========================
@@ -434,7 +439,6 @@ opacity:.35;
 
     display:block;
 
-    opacity:1;
 
     position:absolute;
 
@@ -532,21 +536,6 @@ filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));
 
 }
 
-.scene{
-
-    position:absolute;
-
-    opacity:.88;
-
-    line-height:1;
-
-    filter:drop-shadow(0 6px 5px rgba(90,60,40,.35));
-
-    user-select:none;
-
-    -webkit-user-select:none;
-
-}
 
 /* =========================
    噴泉 2.5D
@@ -976,8 +965,6 @@ filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));
 
     clip-path:polygon(50% 0%,100% 100%,0% 100%);
 
-    box-shadow:0 4px 8px rgba(0,0,0,.15);
-
 }
 
 .gazebo-pillar{
@@ -1077,8 +1064,6 @@ filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));
     background:linear-gradient(180deg,#e87060,#d04838);
 
     clip-path:polygon(50% 0%,100% 100%,0% 100%);
-
-    box-shadow:0 3px 6px rgba(0,0,0,.15);
 
 }
 
@@ -1344,9 +1329,7 @@ padding:3px 14px;
 
 .space.memory{background:linear-gradient(165deg,#f2fbff,#c9ecff);}
 
-.space.challenge,.space.star{background:linear-gradient(165deg,#fffdea,#ffedb3);}
 
-.space.surprise{background:linear-gradient(165deg,#f8efff,#e3ccff);}
 
 .space.fun{background:linear-gradient(165deg,#fffef2,#fff2bd);}
 
@@ -1581,31 +1564,6 @@ contain:content;
     animation: bounce .45s;
 }
 
-@keyframes bounce{
-
-0%{
-    transform:translateY(0) scale(1);
-}
-
-35%{
-    transform:translateY(-18px) scale(1.08);
-}
-
-70%{
-    transform:translateY(-6px) scale(1.03);
-}
-
-100%{
-    transform:translateY(0) scale(1);
-}
-
-}
-
-.piece.jump{
-
-animation:bounce .45s;
-
-}
 /* =========================
    右側控制面板
 ========================= */
@@ -1807,12 +1765,6 @@ transition:.2s;
 
     flex-shrink:0;
 
-}
-.journeyStatus{
-    font-size:11px;
-    letter-spacing:1px;
-    flex-shrink:0;
-    white-space:nowrap;
 }
 
 .teamInput input:focus{
