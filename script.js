@@ -1155,6 +1155,24 @@ document.getElementById("currentTeam").textContent=
 teams[currentTeam].name;
 
 }
+
+// 神韻版：左下隊伍卡（名字/分數/進度/遇見神星星），800ms 輪詢同步（含 Firebase 遠端更新）
+const TEAM_COLORS=["red","blue","green","yellow","purple"];
+const teamCardsEl=document.getElementById("teamCards");
+const escHtml=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let _tcSig="";
+function syncTeamCards(){
+if(!teamCardsEl) return;
+const sig=teams.slice(0,activeTeamCount).map((t,i)=>[t.name,t.score,t.position,t.journey.hasMetGod,currentTeam===i].join("|")).join(";");
+if(sig===_tcSig) return;
+_tcSig=sig;
+teamCardsEl.innerHTML=teams.slice(0,activeTeamCount).map((t,i)=>{
+const pct=Math.min(100,Math.round(t.position/30*100));
+return `<div class="teamCard${currentTeam===i?" current":""}"><span class="dot ${TEAM_COLORS[i]}"></span><div class="tc-main"><div class="tc-name">${escHtml(t.name)}${t.journey.hasMetGod?' <span class="tc-star">★</span>':''}</div><div class="tc-bar"><div class="tc-fill" style="width:${pct}%"></div></div></div><span class="tc-score">${t.score}</span></div>`;
+}).join("");
+}
+setInterval(syncTeamCards,800);
+syncTeamCards();
 // -------------------------------
 // 題庫（之後會改成 questions.json）
 // -------------------------------
@@ -1342,6 +1360,22 @@ movePiece(finalValue);
 },700);
 
 });
+
+// 神韻版：右下大骰子按鈕（委派給 rollBtn，行為與原按鈕一致；骰面與 rolling 狀態同步）
+const bigRollBtn=document.getElementById("bigRollBtn");
+const bigDiceFace=document.getElementById("bigDiceFace");
+if(bigRollBtn){
+bigRollBtn.addEventListener("click",()=>{ document.getElementById("rollBtn").click(); });
+const syncBigDice=()=>{
+if(bigDiceFace && dice.textContent.trim()!=="") bigDiceFace.textContent=dice.textContent;
+bigRollBtn.classList.toggle("rolling",dice.classList.contains("rolling"));
+};
+new MutationObserver(syncBigDice).observe(dice,{childList:true,characterData:true,subtree:true,attributes:true,attributeFilter:["class"]});
+}
+
+// 神韻版：新人頭像背景（base64 放在 couple-data.js，沿用神聖音效的 data URI 做法）
+const _coupleAvatar=document.querySelector(".couple-avatar");
+if(_coupleAvatar && typeof COUPLE_AVATAR_DATA_URI!=="undefined") _coupleAvatar.style.backgroundImage='url("'+COUPLE_AVATAR_DATA_URI+'")';
 
 // -------------------------------
 // 一格一格移動
