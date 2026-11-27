@@ -22,7 +22,7 @@ body{
 }
 
 /* =========================
-   粉色愛情背景
+   夢幻天空背景
 ========================= */
 
 body{
@@ -33,9 +33,9 @@ radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.45),transparent 50%),
 
 radial-gradient(ellipse at 70% 70%,rgba(255,255,255,.2),transparent 45%),
 
-radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(180,140,100,.08) 100%),
+radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(90,140,200,.12) 100%),
 
-linear-gradient(180deg,#f5ead8,#eedfc5,#f0e5d0);
+linear-gradient(180deg,#6fb7ec,#9fd2f7 45%,#cfe9fb);
 
 position:relative;
 
@@ -83,23 +83,25 @@ flex-shrink:0;
 
 display:flex;
 
-justify-content:space-between;
+justify-content:flex-start;
+
+gap:14px;
 
 align-items:center;
 
 padding:6px 24px;
 
-background:rgba(255,255,255,.65);
+background:linear-gradient(180deg,rgba(18,38,74,.85),rgba(12,28,58,.8));
 
 backdrop-filter:blur(10px);
 
 box-shadow:
 
-0 8px 20px rgba(0,0,0,.08);
+0 8px 24px rgba(10,25,50,.35);
 
 border-bottom:
 
-2px solid rgba(255,255,255,.7);
+2px solid rgba(255,215,110,.45);
 
 }
 
@@ -109,11 +111,13 @@ font-size:26px;
 
 font-weight:900;
 
-color:#d94f8c;
+color:#ffd76e;
 
 letter-spacing:2px;
 
 line-height:1.2;
+
+text-shadow:0 2px 8px rgba(0,0,0,.4);
 
 }
 
@@ -121,7 +125,7 @@ line-height:1.2;
 
 margin-top:2px;
 
-color:#888;
+color:#bcd8ff;
 
 font-size:12px;
 
@@ -137,15 +141,19 @@ padding:8px 20px;
 
 border-radius:14px;
 
-background:white;
+background:rgba(255,255,255,.12);
+
+border:1.5px solid rgba(255,215,110,.4);
 
 box-shadow:
 
-0 8px 20px rgba(0,0,0,.08);
+0 8px 20px rgba(0,0,0,.25);
 
 text-align:center;
 
 min-width:160px;
+
+margin-left:auto;
 
 }
 
@@ -153,7 +161,7 @@ min-width:160px;
 
 font-size:12px;
 
-color:#999;
+color:#9fb8dd;
 
 margin-bottom:2px;
 
@@ -165,7 +173,7 @@ font-size:20px;
 
 font-weight:900;
 
-color:#e53980;
+color:#ffd76e;
 
 }
 
@@ -265,11 +273,11 @@ position:relative;
 
     radial-gradient(ellipse at 40% 35%,rgba(255,255,255,.25),transparent 55%),
 
-    linear-gradient(180deg,#e8d5b8,#dcc8a8,#e0cfb5);
+    linear-gradient(180deg,#b5e39a,#8cc46a 55%,#79b85e);
 
     border-radius:50px;
 
-    border:3px solid rgba(180,150,110,.25);
+    border:3px solid rgba(70,120,60,.35);
 
     box-shadow:
 
@@ -1141,19 +1149,21 @@ justify-content:center;
 
 align-items:center;
 
-border-radius:50%;
+border-radius:30px;
 
-border:2px solid rgba(0,0,0,.06);
+border:2px solid rgba(120,100,70,.3);
 
-background:linear-gradient(165deg,#ffffff,#faf0f5);
+background:linear-gradient(165deg,#f8f2e6,#e9dcc2);
 
 box-shadow:
 
-inset 0 3px 5px rgba(255,255,255,.85),
+inset 0 3px 5px rgba(255,255,255,.9),
 
-0 6px 0 #c9a882,
+inset 0 -4px 8px rgba(120,100,70,.12),
 
-0 12px 16px rgba(0,0,0,.12);
+0 6px 0 #b3a284,
+
+0 12px 16px rgba(0,0,0,.14);
 
 transition:.25s;
 
@@ -1371,15 +1381,15 @@ padding:4px 16px;
 
 }
 
-.space.love{background:linear-gradient(165deg,#fff5fa,#ffd3e8);}
+.space.love{background:linear-gradient(165deg,#faf3ec,#f0e0cd);}
 
-.space.memory{background:linear-gradient(165deg,#f2fbff,#c9ecff);}
+.space.memory{background:linear-gradient(165deg,#f2f6f8,#dfe8ea);}
 
 
 
-.space.fun{background:linear-gradient(165deg,#fffef2,#fff2bd);}
+.space.fun{background:linear-gradient(165deg,#fbf6e6,#f2e6c2);}
 
-.space.gift{background:linear-gradient(165deg,#fef6ff,#efdfff);}
+.space.gift{background:linear-gradient(165deg,#f8f3f8,#e9dfee);}
 
 .space.active{
 
@@ -1393,11 +1403,41 @@ box-shadow:
 
 0 0 12px rgba(255,255,255,.85),
 
-0 6px 0 #c9a882,
+0 6px 0 #b3a284,
 
 0 10px 18px rgba(0,0,0,.12);
 
 }
+
+/* 特殊格：遇見神金色發光石板、婚姻試煉深灰石板 */
+.space.god{
+background:linear-gradient(165deg,#fff3c4,#ffd76e 55%,#f0b93e);
+border-color:rgba(180,130,20,.55);
+box-shadow:
+inset 0 3px 6px rgba(255,255,255,.75),
+inset 0 -4px 8px rgba(180,130,20,.25),
+0 0 26px rgba(255,200,60,.8),
+0 6px 0 #c8922e,
+0 12px 18px rgba(0,0,0,.16);
+animation:godGlow 2.4s ease-in-out infinite;
+}
+@keyframes godGlow{
+0%,100%{box-shadow:inset 0 3px 6px rgba(255,255,255,.75),inset 0 -4px 8px rgba(180,130,20,.25),0 0 18px rgba(255,200,60,.55),0 6px 0 #c8922e,0 12px 18px rgba(0,0,0,.16);}
+50%{box-shadow:inset 0 3px 6px rgba(255,255,255,.75),inset 0 -4px 8px rgba(180,130,20,.25),0 0 34px rgba(255,200,60,.95),0 6px 0 #c8922e,0 12px 18px rgba(0,0,0,.16);}
+}
+.space.god .space-name{background:rgba(255,244,200,.92);color:#8a6d1f;}
+.space.god .space-num{color:#8a6d1f;border-color:#ecd28a;}
+.space.trial{
+background:linear-gradient(165deg,#8a94a6,#5b6678);
+border-color:rgba(40,50,65,.5);
+box-shadow:
+inset 0 3px 5px rgba(255,255,255,.35),
+inset 0 -4px 8px rgba(20,30,45,.35),
+0 6px 0 #3a4556,
+0 12px 16px rgba(0,0,0,.2);
+}
+.space.trial .space-name{background:rgba(30,40,55,.55);color:#e8edf3;}
+.space.trial .space-num{color:#4b5563;border-color:#c3ccd8;}
 
 /* =========================
    棋子
@@ -2506,13 +2546,13 @@ align-items:center;
 
 gap:24px;
 
-background:rgba(255,255,255,.75);
+background:rgba(12,28,58,.8);
 
 backdrop-filter:blur(10px);
 
-border-top:1px solid rgba(255,255,255,.7);
+border-top:1px solid rgba(255,215,110,.4);
 
-box-shadow:0 -6px 18px rgba(0,0,0,.06);
+box-shadow:0 -6px 18px rgba(0,0,0,.2);
 
 z-index:500;
 
@@ -2524,7 +2564,7 @@ font-size:14px;
 
 font-weight:700;
 
-color:#97828c;
+color:#cdd9ea;
 
 padding:6px 14px;
 
@@ -2542,9 +2582,9 @@ transition:.2s;
 
 .bar-btn:hover{
 
-background:rgba(255,182,213,.35);
+background:rgba(255,215,110,.22);
 
-color:#d94f8c;
+color:#ffd76e;
 
 }
 
@@ -3183,7 +3223,7 @@ opacity:.85;
     box-shadow:
         inset 0 3px 5px rgba(255,255,255,.85),
         inset 0 -6px 10px rgba(0,0,0,.06),
-        0 12px 0 #c9a882,
+        0 12px 0 #b3a284,
         0 20px 22px rgba(0,0,0,.18);
 }
 .space:hover{
@@ -3203,8 +3243,122 @@ opacity:.85;
         0 0 0 4px #ffd700,
         0 0 44px rgba(255,200,60,.95),
         0 0 16px rgba(255,255,255,.9),
-        0 12px 0 #c9a882,
+        0 12px 0 #b3a284,
         0 20px 22px rgba(0,0,0,.18);
 }
 /* 人偶站立的反轉規則已移到 .piece-figure（本體站立、影子留在棋盤平面）；
    #pieceLayer 也已設 preserve-3d：若被 contain:content 壓平，3D 會失效，小人又會躺回棋盤上 */
+
+
+/* ============ 神韻版：新人頭像、大骰子按鈕、左下隊伍卡 ============ */
+.couple-avatar{
+width:48px;
+height:48px;
+border-radius:50%;
+flex-shrink:0;
+border:2.5px solid #ffd76e;
+background-size:cover;
+background-position:center 20%;
+box-shadow:0 0 12px rgba(255,215,110,.5),0 4px 10px rgba(0,0,0,.3);
+}
+#bigRollBtn{
+position:absolute;
+right:24px;
+bottom:24px;
+z-index:60;
+width:108px;
+height:108px;
+border-radius:50%;
+border:3px solid #ffd76e;
+background:radial-gradient(circle at 50% 30%,rgba(38,64,110,.92),rgba(16,32,64,.94));
+box-shadow:0 0 0 4px rgba(255,215,110,.35),0 0 28px rgba(255,200,60,.45),0 10px 24px rgba(0,0,0,.35);
+cursor:pointer;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:2px;
+transition:transform .2s;
+animation:bigDicePulse 2.6s ease-in-out infinite;
+}
+#bigRollBtn:hover{transform:scale(1.06);}
+#bigRollBtn:active{transform:scale(.96);}
+#bigRollBtn.rolling{opacity:.55;pointer-events:none;animation:none;}
+#bigDiceFace{
+font-size:46px;
+font-weight:900;
+color:#fff;
+line-height:1;
+text-shadow:0 3px 6px rgba(0,0,0,.4);
+}
+.big-roll-label{
+font-size:15px;
+font-weight:800;
+color:#ffd76e;
+letter-spacing:2px;
+}
+@keyframes bigDicePulse{
+0%,100%{box-shadow:0 0 0 4px rgba(255,215,110,.35),0 0 22px rgba(255,200,60,.35),0 10px 24px rgba(0,0,0,.35);}
+50%{box-shadow:0 0 0 6px rgba(255,215,110,.5),0 0 36px rgba(255,200,60,.6),0 10px 24px rgba(0,0,0,.35);}
+}
+#teamCards{
+position:absolute;
+left:20px;
+bottom:20px;
+z-index:60;
+display:flex;
+flex-direction:column;
+gap:8px;
+pointer-events:none;
+}
+.teamCard{
+display:flex;
+align-items:center;
+gap:10px;
+min-width:210px;
+padding:8px 12px;
+border-radius:14px;
+background:rgba(12,28,58,.72);
+backdrop-filter:blur(8px);
+border:1.5px solid rgba(255,255,255,.25);
+box-shadow:0 8px 18px rgba(0,0,0,.25);
+color:#fff;
+}
+.teamCard.current{
+border-color:#ffd76e;
+box-shadow:0 0 0 2px rgba(255,215,110,.55),0 8px 18px rgba(0,0,0,.3);
+}
+.teamCard .dot{
+width:16px;
+height:16px;
+border-radius:50%;
+flex-shrink:0;
+box-shadow:0 0 0 2px rgba(255,255,255,.35);
+}
+.teamCard .tc-main{flex:1;min-width:0;}
+.teamCard .tc-name{
+font-size:15px;
+font-weight:800;
+line-height:1.2;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+.teamCard .tc-bar{
+height:6px;
+border-radius:3px;
+background:rgba(255,255,255,.25);
+margin-top:5px;
+overflow:hidden;
+}
+.teamCard .tc-fill{
+height:100%;
+border-radius:3px;
+background:linear-gradient(90deg,#ffd76e,#ff9ec6);
+}
+.teamCard .tc-score{
+font-size:15px;
+font-weight:900;
+color:#ffd76e;
+}
+.teamCard .tc-star{font-size:15px;}
