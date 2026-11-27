@@ -991,14 +991,21 @@ for(let i=0;i<pts.length-1;i++){
 
     d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
 
-    // 星星指引線：每段路中間放一顆小星星（貝茲曲線 t=0.5 的點，剛好落在兩格之間的空隙）
-    const mx=0.125*p1.x+0.375*c1x+0.375*c2x+0.125*p2.x;
-    const my=0.125*p1.y+0.375*c1y+0.375*c2y+0.125*p2.y;
-    const star=document.createElementNS("http://www.w3.org/2000/svg","path");
-    star.setAttribute("d", STAR_D);
-    star.setAttribute("transform", `translate(${mx} ${my})`);
-    star.classList.add("road-star");
-    starLayer.appendChild(star);
+    // 星星指引線：每段路放星星。銜接內圈的兩段長路（19→20 跨圈、29→LOVE 終點）
+    // 星星加密成橋（各 4 顆，間距約 45px）；t 值避開兩端格子與 LOVE 愛心，不壓到格子
+    const starTs = i===19 ? [0.3,0.42,0.54,0.66]
+                 : i===29 ? [0.28,0.4,0.52,0.64]
+                 : [0.5];
+    starTs.forEach(t=>{
+        const u=1-t;
+        const mx=u*u*u*p1.x+3*u*u*t*c1x+3*u*t*t*c2x+t*t*t*p2.x;
+        const my=u*u*u*p1.y+3*u*u*t*c1y+3*u*t*t*c2y+t*t*t*p2.y;
+        const star=document.createElementNS("http://www.w3.org/2000/svg","path");
+        star.setAttribute("d", STAR_D);
+        star.setAttribute("transform", `translate(${mx} ${my})`);
+        star.classList.add("road-star");
+        starLayer.appendChild(star);
+    });
 
 }
 
