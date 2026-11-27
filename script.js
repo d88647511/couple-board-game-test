@@ -1076,7 +1076,7 @@ function placePieces() {
         const wx = cx + Math.cos(angle) * WAIT_R;
         const wy = cy + Math.sin(angle) * WAIT_R;
         piece.style.left = (wx - 32) + "px";
-        piece.style.top = (wy - 44) + "px";
+        piece.style.top = (wy - 58) + "px";
     });
 
     // 已入場：為每個位置的棋子計算偏移並定位
@@ -1090,7 +1090,7 @@ function placePieces() {
             const piece = document.getElementById("piece" + idx);
             const { dx, dy } = getPieceOffset(count, i);
             piece.style.left = (p.x + 9 + dx) + "px";
-            piece.style.top = (p.y - 3 + dy) + "px";
+            piece.style.top = (p.y - 31 + dy) + "px";
         });
     });
 }
@@ -1349,12 +1349,14 @@ movePiece(finalValue);
 const _coupleAvatar=document.querySelector(".couple-avatar");
 if(_coupleAvatar && typeof COUPLE_AVATAR_DATA_URI!=="undefined") _coupleAvatar.style.backgroundImage='url("'+COUPLE_AVATAR_DATA_URI+'")';
 
-// 隊伍娃娃：動漫風格圖片（pawn-data.js，五隊紅藍綠黃紫）
+// 隊伍娃娃：全身動漫風格圖片，兩格走路姿勢（pawn-data.js，五隊紅藍綠黃紫）
 const PAWN_COLORS=["red","blue","green","yellow","purple"];
-if(typeof PAWN_IMGS!=="undefined"){
+if(typeof PAWN_FRAMES!=="undefined"){
 PAWN_COLORS.forEach((c,i)=>{
-const img=document.querySelector("#piece"+i+" .piece-img");
-if(img && PAWN_IMGS[c]) img.src=PAWN_IMGS[c];
+const fa=document.querySelector("#piece"+i+" .piece-img.frame-a");
+const fb=document.querySelector("#piece"+i+" .piece-img.frame-b");
+if(fa && PAWN_FRAMES[c]) fa.src=PAWN_FRAMES[c].a;
+if(fb && PAWN_FRAMES[c]) fb.src=PAWN_FRAMES[c].b;
 });
 }
 
@@ -1382,7 +1384,7 @@ const next=spaces[now+1];
 
 piece.style.left=(next.x+9+(currentTeam%2)*24)+"px";
 
-piece.style.top=(next.y-3+Math.floor(currentTeam/2)*24)+"px";
+piece.style.top=(next.y-31+Math.floor(currentTeam/2)*24)+"px";
 highlightCell(now + 1);
 
 spotlightTeam(currentTeam);

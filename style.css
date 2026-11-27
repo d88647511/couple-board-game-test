@@ -1468,7 +1468,7 @@ transform-style:preserve-3d;
     position:absolute;
 
     width:64px;
-    height:88px;
+    height:116px;
 
     box-sizing:border-box;
 
@@ -1501,7 +1501,7 @@ transform-style:preserve-3d;
     left:0;
     top:0;
     width:64px;
-    height:88px;
+    height:116px;
     transform:rotateX(-45deg);
     transform-origin:50% 100%;
     z-index:1;
@@ -1512,15 +1512,32 @@ transform-style:preserve-3d;
     left:0;
     top:0;
     width:64px;
-    height:88px;
+    height:116px;
 }
 
 .piece-img{
+    position:absolute;
+    left:0;
+    top:0;
     width:100%;
     height:100%;
-    object-fit:cover;
+    object-fit:contain;
+    object-position:bottom;
     display:block;
 }
+.piece-img.frame-b{opacity:0;}
+
+/* 走路：兩格走路姿勢交替（0.86s 一個步態，半拍換一格） */
+@keyframes frameA {
+    0%, 49.99% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+@keyframes frameB {
+    0%, 49.99% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+.piece.walking .piece-img.frame-a { animation: frameA .86s linear infinite; }
+.piece.walking .piece-img.frame-b { animation: frameB .86s linear infinite; }
 
 .piece * {
     pointer-events: none;
