@@ -289,9 +289,9 @@ function unprojectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) / TILT_COS; }
 // ───────────────────────────────
 const OVAL_CX = 1200, OVAL_CY = 825;       // 橢圓中心（棋盤 2400×1650 的中心）
 // 兩圈橢圓旅程（設計圖：外圈＋內圈，向內螺旋到 LOVE）
-// 外圈 0–19（START 在左上方 225°，周長約 4194，間距約 210）
+// 外圈 0–19（START 在左上方 225°，周長約 3974，間距約 199）
 // 內圈 20–29（起點 207°，接在外圈 19 號格附近，周長約 2193，間距約 219）
-const OUTER = {rx:800, ry:520, n:20, startDeg:225};
+const OUTER = {rx:760, ry:490, n:20, startDeg:225};
 const INNER = {rx:420, ry:270, n:10, startDeg:207};
 
 // 橢圓弧長取樣表（等弧長放格，間距才會平均）
@@ -958,6 +958,8 @@ board.appendChild(div);
 
 });
 
+addLoveFlowers();
+
 }
 
 // -------------------------------
@@ -1130,6 +1132,8 @@ function placePieces() {
             piece.style.top = (p.y - 31 + dy) + "px";
         });
     });
+
+    markActiveTile();
 }
 
 function getPieceOffset(count, i) {
@@ -1190,6 +1194,8 @@ function updateTurn(){
 
 document.getElementById("currentTeam").textContent=
 teams[currentTeam].name;
+
+markActiveTile();
 
 }
 
@@ -1391,10 +1397,10 @@ if(_coupleAvatar && typeof COUPLE_AVATAR_DATA_URI!=="undefined") _coupleAvatar.s
 
 // 設計圖天空背景（浮空城堡＋雲，bg-data.js）
 if(typeof BG_SKY_DATA_URI!=="undefined"){
-    document.body.style.backgroundImage='url("'+BG_SKY_DATA_URI+'")';
-    document.body.style.backgroundSize='cover';
-    document.body.style.backgroundPosition='center';
-    document.body.style.backgroundRepeat='no-repeat';
+    document.body.style.backgroundImage='radial-gradient(ellipse at center, transparent 55%, rgba(30,60,100,.16) 100%), url("'+BG_SKY_DATA_URI+'")';
+    document.body.style.backgroundSize='100% 100%, cover';
+    document.body.style.backgroundPosition='center, center';
+    document.body.style.backgroundRepeat='no-repeat, no-repeat';
 }
 
 // 隊伍娃娃：全身動漫風格圖片，兩格走路姿勢（pawn-data.js，五隊紅藍綠黃紫）
@@ -2372,6 +2378,29 @@ function highlightCell(index){
     document
         .querySelector(`.space[data-index="${index}"]`)
         ?.classList.add("active");
+}
+
+// 目前隊伍的格子發光：跟著輪到的隊伍走（還沒入場就亮 START）
+function markActiveTile(){
+    const t=teams[currentTeam];
+    const idx=(t && t.entered) ? t.position : 0;
+    highlightCell(idx);
+}
+
+// LOVE 愛心花圈：6 朵小花圍在愛心外（設計圖的花圈）
+function addLoveFlowers(){
+    const board=document.getElementById("board");
+    if(!board || board.querySelector(".love-flower")) return;
+    const cx=OVAL_CX, cy=OVAL_CY, r=160;
+    for(let k=0;k<6;k++){
+        const a=(k*60+30)*Math.PI/180;
+        const f=document.createElement("span");
+        f.className="love-flower";
+        f.textContent="\u{1F338}";
+        f.style.left=(cx+Math.cos(a)*r)+"px";
+        f.style.top=(cy+Math.sin(a)*r)+"px";
+        board.appendChild(f);
+    }
 }
 const winnerBtn=document.getElementById("winnerBtn");
 
