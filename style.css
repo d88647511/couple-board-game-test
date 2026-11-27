@@ -232,7 +232,7 @@ position:relative;
 
 #boardViewport.dragging .space:hover{
 
-    transform:none;
+    transform:rotate(var(--tile-rot,0deg)) translateZ(12px);
 
 }
 
@@ -1196,6 +1196,8 @@ align-items:center;
 gap:6px;
 
 pointer-events:none;
+
+transform:rotate(var(--tile-rot-neg,0deg));
 
 }
 
@@ -3013,7 +3015,7 @@ opacity:.85;
 }
 /* 格子：浮起 12px + 加厚底邊，變成立體圓盤地磚 */
 .space{
-    transform:translateZ(12px);
+    transform:rotate(var(--tile-rot,0deg)) translateZ(12px);
     box-shadow:
         inset 0 3px 5px rgba(255,255,255,.85),
         inset 0 -6px 10px rgba(0,0,0,.06),
@@ -3021,10 +3023,10 @@ opacity:.85;
         0 20px 22px rgba(0,0,0,.18);
 }
 .space:hover{
-    transform:translateZ(12px) scale(1.04);
+    transform:rotate(var(--tile-rot,0deg)) translateZ(12px) scale(1.04);
 }
 #boardViewport.dragging .space:hover{
-    transform:translateZ(12px);
+    transform:rotate(var(--tile-rot,0deg)) translateZ(12px);
 }
 .space.start,.space.goal{
     box-shadow:
@@ -3032,6 +3034,24 @@ opacity:.85;
         0 14px 0 #c4487a,
         0 22px 26px rgba(0,0,0,.2);
 }
+
+/* =========================
+   鵝卵石造型（設計圖）：格子形狀多變、長軸順著路徑
+========================= */
+.space.shape-pebble{border-radius:48% 52% 55% 45% / 52% 46% 54% 48%;}
+.space.shape-oval{border-radius:999px;}
+.space.shape-slab{border-radius:30px;}
+.space.shape-round{border-radius:50%;}
+.space.shape-start{border-radius:999px;}
+/* LOVE：愛心形（240 格專用路徑），用 drop-shadow 才會跟著愛心形狀 */
+.space.shape-love{
+    border-radius:0;
+    clip-path:path("M120 218 C62 178 22 142 22 96 C22 60 52 34 82 34 C102 34 115 44 120 60 C125 44 138 34 158 34 C188 34 218 60 218 96 C218 142 178 178 120 218 Z");
+    box-shadow:none;
+    filter:drop-shadow(0 12px 14px rgba(190,50,110,.35));
+}
+/* 設計圖沒有馬路：格子直接落在天空上，路徑靠橢圓排列＋編號暗示 */
+#roadLayer{display:none;}
 .space.active{
     box-shadow:
         0 0 0 4px #ffd700,
