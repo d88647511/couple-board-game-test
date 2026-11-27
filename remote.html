@@ -127,6 +127,23 @@ const permissionBtn = document.getElementById("permissionBtn");
 
 const diceSound = new Audio("dice.mp3");
 diceSound.volume = 0.8;
+// 預載骰子音效：頁面一開就開始載，否則第一次甩動要等音檔下載，骰子先轉、聲音才出。
+diceSound.preload = "auto";
+diceSound.load();
+
+// 預熱音效：在使用者第一次點按（授權）時以靜音播一次，把音檔解碼好
+// （iOS 要有手勢才肯解碼音檔），之後甩動 play() 才會立刻出聲。
+function warmUpDiceSound(){
+    const v=diceSound.volume;
+    diceSound.volume=0;
+    const p=diceSound.play();
+    if(p && p.then){
+        p.then(()=>{ diceSound.pause(); diceSound.currentTime=0; diceSound.volume=v; })
+         .catch(()=>{ diceSound.volume=v; });
+    } else {
+        diceSound.volume=v;
+    }
+}
 
 let shakePermissionGranted = false;
 let shakeEnabled = false;
@@ -190,6 +207,7 @@ async function requestShakePermission() {
             if (permission === "granted") {
                 shakePermissionGranted = true;
                 enableShakeDetection();
+                warmUpDiceSound();
                 permissionBtn.classList.add("hidden");
                 diceLabel.textContent = "甩動手機即可擲骰";
             } else {
@@ -202,6 +220,7 @@ async function requestShakePermission() {
     } else {
         shakePermissionGranted = true;
         enableShakeDetection();
+        warmUpDiceSound();
         permissionBtn.classList.add("hidden");
         diceLabel.textContent = "甩動手機即可擲骰";
     }
