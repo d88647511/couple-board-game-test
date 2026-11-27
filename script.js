@@ -287,24 +287,66 @@ function unprojectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) / TILT_COS; }
 // 0–29 沿橢圓一圈（START 在左上方，順時針），LOVE(30) 在橢圓中心。
 // 背景的綠色底圖與樹木已拿掉，棋盤直接落在天空底色上。
 // ───────────────────────────────
-const CIRCLE_R = 95;                       // 普通格半徑（直徑 190，配合橢圓間距，格子剛好相接）
-const BIG_R    = 108;                      // START / LOVE 半徑（直徑 216）
-
 const OVAL_CX = 1200, OVAL_CY = 825;       // 橢圓中心（棋盤 2400×1650 的中心）
 const OVAL_RX = 1080, OVAL_RY = 700;       // 橢圓半徑（周長約 5650，30 格間距約 189）
 const OVAL_START_DEG = 225;                // START 在左上方（225°）
 
-// 站點：0–29 沿橢圓順時針一圈，等角度排列
+// 橢圓弧長等距取點：先以 720 段取樣累積弧長，再按等弧長放 30 格
+// （等角度會讓左右兩端擠、上下散開，不自然）
+const OVAL_SAMPLES = 720;
+const ovalCum = [0];
+for(let k=1;k<=OVAL_SAMPLES;k++){
+    const a0=(k-1)/OVAL_SAMPLES*2*Math.PI, a1=k/OVAL_SAMPLES*2*Math.PI;
+    const x0=OVAL_CX+OVAL_RX*Math.cos(a0), y0=OVAL_CY+OVAL_RY*Math.sin(a0);
+    const x1=OVAL_CX+OVAL_RX*Math.cos(a1), y1=OVAL_CY+OVAL_RY*Math.sin(a1);
+    ovalCum.push(ovalCum[k-1]+Math.hypot(x1-x0,y1-y0));
+}
+const OVAL_PERIM = ovalCum[OVAL_SAMPLES];
+function ovalAngleAt(len){
+    len=((len%OVAL_PERIM)+OVAL_PERIM)%OVAL_PERIM;
+    let lo=0, hi=OVAL_SAMPLES;
+    while(lo<hi){ const mid=(lo+hi)>>1; if(ovalCum[mid]<len) lo=mid+1; else hi=mid; }
+    const i=Math.max(1,lo);
+    const l0=ovalCum[i-1], l1=ovalCum[i];
+    const f=l1>l0?(len-l0)/(l1-l0):0;
+    return ((i-1+f)/OVAL_SAMPLES)*2*Math.PI;
+}
+// START 在 225°：先算 225° 對應的弧長，再等弧長放格
+const OVAL_START_LEN = (function(){
+    const frac=(OVAL_START_DEG*Math.PI/180)/(2*Math.PI);
+    const idx=frac*OVAL_SAMPLES;
+    const i0=Math.floor(idx), f=idx-i0;
+    return ovalCum[i0]+(ovalCum[Math.min(i0+1,OVAL_SAMPLES)]-ovalCum[i0])*f;
+})();
+// 站點：0–29 沿橢圓順時針一圈，等弧長排列；每格記下橢圓角（供切線角用）
 const sPoints = Array.from({length:30},(_,i)=>{
-    const a = (OVAL_START_DEG + i*(360/30)) * Math.PI/180;
+    const a=ovalAngleAt(OVAL_START_LEN + i*(OVAL_PERIM/30));
     return {
         x: Math.round(OVAL_CX + OVAL_RX*Math.cos(a)),
-        y: Math.round(OVAL_CY + OVAL_RY*Math.sin(a))
+        y: Math.round(OVAL_CY + OVAL_RY*Math.sin(a)),
+        _a: a
     };
 });
 
 // LOVE 終點：在橢圓中心（旅程的心）
-sPoints.push({x: OVAL_CX, y: OVAL_CY});
+sPoints.push({x: OVAL_CX, y: OVAL_CY, _a: 0});
+
+// 每格切線角（格子長軸順著路徑）與鵝卵石造型（依 index 固定，穩定不跳動）
+function tileTangent(i){
+    if(i===30) return 0;
+    const a=sPoints[i]._a;
+    return Math.atan2(OVAL_RY*Math.cos(a), -OVAL_RX*Math.sin(a))*180/Math.PI;
+}
+function tileShape(i){
+    if(i===0) return {cls:"shape-start", len:215, wid:175};
+    if(i===30) return {cls:"shape-love", len:240, wid:240};
+    const h=(i*2654435761)%100;
+    const j=v=>((v%5)-2)*2; // ±4 的尺寸抖動
+    if(h<30) return {cls:"shape-oval", len:190+j(h), wid:160+j(h+1)};
+    if(h<55) return {cls:"shape-pebble", len:185+j(h), wid:175+j(h+1)};
+    if(h<80) return {cls:"shape-slab", len:195+j(h), wid:168+j(h+1)};
+    return {cls:"shape-round", len:185+j(h), wid:185+j(h+1)};
+}
 
 // 格子資料：固定題目模式（index 0 = START, index 30 = GOAL）
 const spaceDefs = [
@@ -348,7 +390,9 @@ const spaces = spaceDefs.map((def,i)=>({
     blessing: def.blessing,
     name: def.name,
     x: Math.round(sPoints[i].x - 41),
-    y: Math.round(sPoints[i].y - 41)
+    y: Math.round(sPoints[i].y - 41),
+    rot: Math.round(tileTangent(i)*10)/10,
+    shape: tileShape(i)
 }));
 
 
@@ -875,13 +919,15 @@ div.dataset.index=index;
 const isStart=index===0;
 const isGoal=index===spaces.length-1;
 
-// 以站點中心為基準絕對定位（道路上依序排列的圓形事件站）
-// 中心 = space.x+41；起點/終點為較大的圓形
-const hw = isStart||isGoal ? BIG_R : CIRCLE_R;
-div.style.left = (space.x + 41 - hw) + "px";
-div.style.top  = (space.y + 41 - hw) + "px";
-div.style.width  = (hw*2) + "px";
-div.style.height = (hw*2) + "px";
+// 以站點中心為基準絕對定位；格子長軸順著路徑（--tile-rot），內容反轉回正
+const sh = space.shape;
+div.classList.add(sh.cls);
+div.style.left = (space.x + 41 - sh.len/2) + "px";
+div.style.top  = (space.y + 41 - sh.wid/2) + "px";
+div.style.width  = sh.len + "px";
+div.style.height = sh.wid + "px";
+div.style.setProperty("--tile-rot", space.rot + "deg");
+div.style.setProperty("--tile-rot-neg", (-space.rot) + "deg");
 
 if(isStart){
 
@@ -1332,6 +1378,14 @@ movePiece(finalValue);
 // 神韻版：新人頭像背景（base64 放在 couple-data.js，沿用神聖音效的 data URI 做法）
 const _coupleAvatar=document.querySelector(".couple-avatar");
 if(_coupleAvatar && typeof COUPLE_AVATAR_DATA_URI!=="undefined") _coupleAvatar.style.backgroundImage='url("'+COUPLE_AVATAR_DATA_URI+'")';
+
+// 設計圖天空背景（浮空城堡＋雲，bg-data.js）
+if(typeof BG_SKY_DATA_URI!=="undefined"){
+    document.body.style.backgroundImage='url("'+BG_SKY_DATA_URI+'")';
+    document.body.style.backgroundSize='cover';
+    document.body.style.backgroundPosition='center';
+    document.body.style.backgroundRepeat='no-repeat';
+}
 
 // 隊伍娃娃：全身動漫風格圖片，兩格走路姿勢（pawn-data.js，五隊紅藍綠黃紫）
 const PAWN_COLORS=["red","blue","green","yellow","purple"];
