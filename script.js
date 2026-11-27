@@ -1867,6 +1867,39 @@ return {
 
 }
 
+// 實測棋盤在畫面上的範圍（31 格 + 5 隻娃娃的聯集，viewport 座標）。
+// 透視會把靠近鏡頭的下緣放大，解析式 fit（BOARD_W×s）低估實際寬度，
+// 導致最底列左右被切掉；改用實測值才算得準。
+function boardScreenRect(){
+const vp=viewport.getBoundingClientRect();
+let l=Infinity,t=Infinity,r=-Infinity,b=-Infinity;
+document.querySelectorAll(".space, .piece").forEach(el=>{
+const x=el.getBoundingClientRect();
+if(!x.width&&!x.height) return;
+l=Math.min(l,x.left-vp.left); t=Math.min(t,x.top-vp.top);
+r=Math.max(r,x.right-vp.left); b=Math.max(b,x.bottom-vp.top);
+});
+if(!isFinite(l)) return null;
+return {left:l,top:t,right:r,bottom:b,width:r-l,height:b-t,cx:(l+r)/2,cy:(t+b)/2};
+}
+
+// 依實測棋盤範圍算出「整張棋盤完整可視」的視角（只回傳，不套用）。
+// 縮放是均勻乘數，所以在目前視角下量測、算出的 fit 在任何起點都成立。
+// 算出的縮放會記在 cachedFitScale，給 zoomMinScale 用。
+let cachedFitScale=null;
+function computeFitView(){
+const vw=viewport.clientWidth, vh=viewport.clientHeight;
+const r=boardScreenRect();
+if(!r) return cameraToFit();
+const k=Math.min(vw/r.width, vh/r.height)*0.96;
+const s=viewScale*k;
+// 棋盤矩形以 (viewX,viewY) 為原點縮放 k 倍，解出置中後的新原點
+const nx=vw/2-(r.cx-viewX)*k;
+const ny=vh/2-(r.cy-viewY)*k;
+cachedFitScale=s;
+return {x:nx,y:ny,s:s};
+}
+
 function cameraAtStart(){
 
 // 以「目前實際 START 站點座標」為準（新版圓形格，非舊方格固定座標）
@@ -1893,7 +1926,11 @@ introPlaying=true;
 
 cancelCamAnim();
 
-const fit=cameraToFit();
+// 先用解析式 fit 擺一個起點，再用實測棋盤範圍修正（透視會放大下緣）
+const a=cameraToFit();
+viewX=a.x; viewY=a.y; viewScale=a.s;
+applyView();
+const fit=computeFitView();
 
 viewX=fit.x;
 viewY=fit.y;
@@ -1901,7 +1938,7 @@ viewScale=fit.s;
 
 viewport.classList.remove("intro-animating");
 
-clampView();
+// 不呼叫 clampView：它用解析式尺寸置中，會把實測 fit 推回溢出的位置
 applyView();
 
 void boardContainerEl.offsetWidth;
@@ -2024,8 +2061,9 @@ const ZOOM_MAX=2.0;
 // 永遠允許縮小到「完整看到整張遊戲地圖」（並留些空白邊），
 // 而非被固定數字卡住。
 function zoomMinScale(){
-    const fit=cameraToFit();
-    return fit.s * 0.9;
+    // 優先用實測的完整視角縮放（已含透視修正），還沒量過才用解析式
+    const s=cachedFitScale!==null ? cachedFitScale : cameraToFit().s;
+    return s * 0.9;
 }
 
 const activePtrs=new Map();
@@ -2165,6 +2203,7 @@ if(introPlaying){
     clearTimeout(introMoveTimer);
     playIntro();
 }else{
+    computeFitView(); // 視窗變了，更新實測 fit 縮放（給最小縮放用），視角本身不動
     clampView();
     applyView();
 }
