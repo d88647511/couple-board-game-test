@@ -498,21 +498,22 @@ stroke-linejoin:round;
 
 }
 
-#roadLayer .road-dash{
-
-stroke:rgba(255,255,255,.55);
-
-stroke-width:6px;
-
-fill:none;
-
-stroke-linecap:round;
-
-stroke-linejoin:round;
-
-stroke-dasharray:0.1 18;
-
-opacity:.5;
+/* 星星指引層：蓋在格子上方（z 4，格子 3、棋子 10），星星完整露出、不被格子遮住 */
+#starLayer{
+    position:absolute;
+    left:0;
+    top:0;
+    width:2400px;
+    height:1650px;
+    pointer-events:none;
+    z-index:4;
+}
+#starLayer .road-star{
+fill:#ffcf5c;
+stroke:rgba(255,255,255,.8);
+stroke-width:1;
+opacity:.92;
+}
 
 }
 
