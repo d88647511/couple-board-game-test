@@ -1373,7 +1373,7 @@ pointer-events:none;
 
 z-index:10;
 
-contain:content;
+transform-style:preserve-3d;
 
 }
 
@@ -1381,18 +1381,52 @@ contain:content;
 
     position:absolute;
 
-    width:44px;
-    height:56px;
+    width:64px;
+    height:88px;
 
     box-sizing:border-box;
 
+    transform-style:preserve-3d;
+
     transition:
         left .45s linear,
-        top .45s linear,
-        transform .25s;
+        top .45s linear;
 
     z-index:100;
 
+}
+
+/* 影子：留在棋盤平面（不跟著人偶反轉），腳底的橢圓投影 */
+.piece-shadow{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:48px;
+    height:12px;
+    background:radial-gradient(ellipse, rgba(0,0,0,.28) 0%, rgba(0,0,0,.12) 55%, transparent 72%);
+    border-radius:50%;
+    z-index:0;
+}
+
+/* 人偶本體：反轉回來站立，腳底貼在格子上 */
+.piece-figure{
+    position:absolute;
+    left:0;
+    top:0;
+    width:64px;
+    height:88px;
+    transform:rotateX(-45deg);
+    transform-origin:50% 100%;
+    z-index:1;
+}
+
+.piece-doll{
+    position:absolute;
+    left:0;
+    top:0;
+    width:64px;
+    height:88px;
 }
 
 .piece * {
@@ -1401,17 +1435,41 @@ contain:content;
 
 .piece .chibi-head {
     position: absolute;
-    top: 2px;
+    top: 6px;
     left: 50%;
     transform: translateX(-50%);
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    border: 2px solid rgba(0,0,0,.15);
+    background: linear-gradient(145deg, #ffe9c9, #ffcf9e 70%, #f7b878);
+    border: 2px solid rgba(0,0,0,.12);
     box-shadow:
-        inset 0 -2px 4px rgba(0,0,0,.1),
-        inset 0 2px 4px rgba(255,255,255,.3);
+        inset 0 -3px 5px rgba(0,0,0,.08),
+        inset 0 3px 5px rgba(255,255,255,.4);
     z-index: 2;
+}
+
+.piece .chibi-hair {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 26px;
+    border-radius: 50% 50% 42% 42% / 62% 62% 38% 38%;
+    z-index: 3;
+}
+
+.piece .chibi-hair::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 55%;
+    width: 7px;
+    height: 11px;
+    background: inherit;
+    border-radius: 50%;
+    transform: rotate(18deg);
 }
 
 .piece .chibi-face {
@@ -1420,136 +1478,178 @@ contain:content;
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 4;
 }
 
 .piece .chibi-eye {
     position: absolute;
-    width: 4px;
-    height: 5px;
+    width: 7px;
+    height: 9px;
     background: #2d2d2d;
     border-radius: 50%;
-    top: 8px;
+    top: 15px;
     animation: blink 4s infinite;
 }
 
-.piece .chibi-eye.left { left: 6px; }
-.piece .chibi-eye.right { right: 6px; }
+.piece .chibi-eye::after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.piece .chibi-eye.left { left: 9px; }
+.piece .chibi-eye.right { right: 9px; }
 
 .piece .chibi-cheek {
     position: absolute;
-    width: 5px;
-    height: 3px;
-    background: rgba(255,100,100,.6);
+    width: 8px;
+    height: 5px;
+    background: rgba(255,110,110,.55);
     border-radius: 50%;
-    bottom: 4px;
+    bottom: 7px;
 }
 
-.piece .chibi-cheek.left { left: 3px; }
-.piece .chibi-cheek.right { right: 3px; }
+.piece .chibi-cheek.left { left: 4px; }
+.piece .chibi-cheek.right { right: 4px; }
 
 .piece .chibi-mouth {
     position: absolute;
-    bottom: 5px;
+    bottom: 7px;
     left: 50%;
     transform: translateX(-50%);
-    width: 6px;
-    height: 2px;
+    width: 9px;
+    height: 3px;
     border-bottom: 2px solid #2d2d2d;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 5px 5px;
 }
 
 .piece .chibi-body {
     position: absolute;
-    top: 28px;
+    top: 44px;
     left: 50%;
     transform: translateX(-50%);
-    width: 26px;
-    height: 24px;
-    border-radius: 14px 14px 9px 9px;
-    border: 2px solid rgba(0,0,0,.15);
+    width: 36px;
+    height: 30px;
+    border-radius: 16px 16px 10px 10px;
+    border: 2px solid rgba(0,0,0,.12);
     box-shadow:
-        inset 0 -2px 4px rgba(0,0,0,.1),
-        inset 0 2px 4px rgba(255,255,255,.2);
+        inset 0 -3px 5px rgba(0,0,0,.1),
+        inset 0 3px 5px rgba(255,255,255,.25);
     z-index: 1;
+}
+
+.piece .chibi-collar {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 8px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 0 0 10px 10px;
+}
+
+.piece .chibi-heart {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.95);
+    font-size: 12px;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,.25);
 }
 
 .piece .chibi-arm {
     position: absolute;
-    top: 32px;
-    width: 8px;
-    height: 16px;
-    border-radius: 4px;
+    top: 48px;
+    width: 10px;
+    height: 22px;
+    border-radius: 5px;
+    transform-origin: top center;
     z-index: 0;
 }
 
+.piece .chibi-arm::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 1px;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(145deg, #ffe9c9, #ffcf9e);
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,.1);
+}
+
 .piece .chibi-arm.left {
-    left: 0px;
-    transform: rotate(-20deg);
-    transform-origin: top center;
+    left: 6px;
+    transform: rotate(-12deg);
 }
 
 .piece .chibi-arm.right {
-    right: 0px;
-    transform: rotate(20deg);
-    transform-origin: top center;
+    right: 6px;
+    transform: rotate(12deg);
 }
 
 .piece .chibi-leg {
     position: absolute;
-    bottom: 2px;
-    width: 8px;
-    height: 12px;
-    border-radius: 4px 4px 0 0;
+    bottom: 4px;
+    width: 11px;
+    height: 16px;
+    background: linear-gradient(145deg, #4a4f6d, #2e3247);
+    border-radius: 5px 5px 3px 3px;
+    transform-origin: top center;
     z-index: 0;
 }
 
+.piece .chibi-leg::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 11px;
+    height: 7px;
+    background: #6b4226;
+    border-radius: 3px 3px 4px 4px;
+}
+
 .piece .chibi-leg.left {
-    left: 8px;
+    left: 14px;
 }
 
 .piece .chibi-leg.right {
-    right: 8px;
+    right: 14px;
 }
 
-.piece .chibi-shadow {
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 28px;
-    height: 6px;
-    background: radial-gradient(ellipse, rgba(0,0,0,.15) 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: -1;
-}
+.red .chibi-hair { background: linear-gradient(145deg, #e05252, #a82525); }
+.red .chibi-body { background: linear-gradient(145deg, #ff7a7a, #e54848 70%, #c93333); }
+.red .chibi-arm { background: linear-gradient(145deg, #ff7a7a, #e54848); }
 
-.red .chibi-head { background: linear-gradient(145deg, #ffd6d6, #ff6b6b, #cc3333); }
-.red .chibi-body { background: linear-gradient(145deg, #ff6b6b, #cc3333); }
-.red .chibi-arm { background: linear-gradient(145deg, #ff6b6b, #cc3333); }
-.red .chibi-leg { background: linear-gradient(145deg, #cc3333, #990000); }
+.blue .chibi-hair { background: linear-gradient(145deg, #2f7fd0, #174e8f); }
+.blue .chibi-body { background: linear-gradient(145deg, #5db0ff, #2f7fd0 70%, #1a5fb4); }
+.blue .chibi-arm { background: linear-gradient(145deg, #5db0ff, #2f7fd0); }
 
-.blue .chibi-head { background: linear-gradient(145deg, #cce4ff, #4da6ff, #1a5fb4); }
-.blue .chibi-body { background: linear-gradient(145deg, #4da6ff, #1a5fb4); }
-.blue .chibi-arm { background: linear-gradient(145deg, #4da6ff, #1a5fb4); }
-.blue .chibi-leg { background: linear-gradient(145deg, #1a5fb4, #0d3d80); }
+.green .chibi-hair { background: linear-gradient(145deg, #3fb53f, #1f7a1f); }
+.green .chibi-body { background: linear-gradient(145deg, #66dd66, #3fb53f 70%, #2a992a); }
+.green .chibi-arm { background: linear-gradient(145deg, #66dd66, #3fb53f); }
 
-.green .chibi-head { background: linear-gradient(145deg, #d4ffd4, #55d655, #2a992a); }
-.green .chibi-body { background: linear-gradient(145deg, #55d655, #2a992a); }
-.green .chibi-arm { background: linear-gradient(145deg, #55d655, #2a992a); }
-.green .chibi-leg { background: linear-gradient(145deg, #2a992a, #1a6b1a); }
+.yellow .chibi-hair { background: linear-gradient(145deg, #d9a400, #a67c00); }
+.yellow .chibi-body { background: linear-gradient(145deg, #ffe966, #f2c200 70%, #d9a400); }
+.yellow .chibi-arm { background: linear-gradient(145deg, #ffe966, #f2c200); }
 
-.yellow .chibi-head { background: linear-gradient(145deg, #fff9cc, #ffe655, #ccaa00); }
-.yellow .chibi-body { background: linear-gradient(145deg, #ffe655, #ccaa00); }
-.yellow .chibi-arm { background: linear-gradient(145deg, #ffe655, #ccaa00); }
-.yellow .chibi-leg { background: linear-gradient(145deg, #ccaa00, #997700); }
-
-.purple .chibi-head { background: linear-gradient(145deg, #f0d9ff, #d479ff, #8a3ab0); }
-.purple .chibi-body { background: linear-gradient(145deg, #d479ff, #8a3ab0); }
-.purple .chibi-arm { background: linear-gradient(145deg, #d479ff, #8a3ab0); }
-.purple .chibi-leg { background: linear-gradient(145deg, #8a3ab0, #5a1a70); }
+.purple .chibi-hair { background: linear-gradient(145deg, #a55ed6, #6e2a96); }
+.purple .chibi-body { background: linear-gradient(145deg, #dd8fff, #b45ee0 70%, #8a3ab0); }
+.purple .chibi-arm { background: linear-gradient(145deg, #dd8fff, #b45ee0); }
 
 @keyframes blink {
-    0%, 45%, 55%, 100% { height: 5px; }
+    0%, 45%, 55%, 100% { height: 9px; }
     50% { height: 1px; }
 }
 
@@ -1560,9 +1660,42 @@ contain:content;
     100% { transform: translateY(0) rotateX(-45deg) scale(1); }
 }
 
-.piece.jump {
+.piece.jump .piece-figure {
     animation: bounce .45s;
 }
+
+/* 走路：左右腿交替擺動、手臂反向擺動、身體上下起伏
+   一步約 430ms，一個完整步態（左右各一步）約 860ms */
+@keyframes legSwingL {
+    0%, 100% { transform: rotate(28deg); }
+    50% { transform: rotate(-28deg); }
+}
+
+@keyframes legSwingR {
+    0%, 100% { transform: rotate(-28deg); }
+    50% { transform: rotate(28deg); }
+}
+
+@keyframes armSwingL {
+    0%, 100% { transform: rotate(-24deg); }
+    50% { transform: rotate(20deg); }
+}
+
+@keyframes armSwingR {
+    0%, 100% { transform: rotate(20deg); }
+    50% { transform: rotate(-24deg); }
+}
+
+@keyframes walkBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.piece.walking .chibi-leg.left { animation: legSwingL .86s ease-in-out infinite; }
+.piece.walking .chibi-leg.right { animation: legSwingR .86s ease-in-out infinite; }
+.piece.walking .chibi-arm.left { animation: armSwingL .86s ease-in-out infinite; }
+.piece.walking .chibi-arm.right { animation: armSwingR .86s ease-in-out infinite; }
+.piece.walking .piece-doll { animation: walkBob .43s ease-in-out infinite; }
 
 /* =========================
    右側控制面板
@@ -3027,8 +3160,5 @@ opacity:.85;
         0 12px 0 #c9a882,
         0 20px 22px rgba(0,0,0,.18);
 }
-/* 人偶：反轉回來站立，腳底貼在格子上 */
-.piece{
-    transform:rotateX(-45deg);
-    transform-origin:50% 100%;
-}
+/* 人偶站立的反轉規則已移到 .piece-figure（本體站立、影子留在棋盤平面）；
+   #pieceLayer 也已設 preserve-3d：若被 contain:content 壓平，3D 會失效，小人又會躺回棋盤上 */
