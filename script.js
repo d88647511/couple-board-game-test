@@ -288,54 +288,65 @@ function unprojectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) / TILT_COS; }
 // 背景的綠色底圖與樹木已拿掉，棋盤直接落在天空底色上。
 // ───────────────────────────────
 const OVAL_CX = 1200, OVAL_CY = 825;       // 橢圓中心（棋盤 2400×1650 的中心）
-const OVAL_RX = 1080, OVAL_RY = 700;       // 橢圓半徑（周長約 5650，30 格間距約 189）
-const OVAL_START_DEG = 225;                // START 在左上方（225°）
+// 兩圈橢圓旅程（設計圖：外圈＋內圈，向內螺旋到 LOVE）
+// 外圈 0–19（START 在左上方 225°，周長約 4194，間距約 210）
+// 內圈 20–29（起點 207°，接在外圈 19 號格附近，周長約 2193，間距約 219）
+const OUTER = {rx:800, ry:520, n:20, startDeg:225};
+const INNER = {rx:420, ry:270, n:10, startDeg:207};
 
-// 橢圓弧長等距取點：先以 720 段取樣累積弧長，再按等弧長放 30 格
-// （等角度會讓左右兩端擠、上下散開，不自然）
-const OVAL_SAMPLES = 720;
-const ovalCum = [0];
-for(let k=1;k<=OVAL_SAMPLES;k++){
-    const a0=(k-1)/OVAL_SAMPLES*2*Math.PI, a1=k/OVAL_SAMPLES*2*Math.PI;
-    const x0=OVAL_CX+OVAL_RX*Math.cos(a0), y0=OVAL_CY+OVAL_RY*Math.sin(a0);
-    const x1=OVAL_CX+OVAL_RX*Math.cos(a1), y1=OVAL_CY+OVAL_RY*Math.sin(a1);
-    ovalCum.push(ovalCum[k-1]+Math.hypot(x1-x0,y1-y0));
+// 橢圓弧長取樣表（等弧長放格，間距才會平均）
+function ovalTable(rx, ry, samples){
+    const cum=[0];
+    for(let k=1;k<=samples;k++){
+        const a0=(k-1)/samples*2*Math.PI, a1=k/samples*2*Math.PI;
+        const x0=rx*Math.cos(a0), y0=ry*Math.sin(a0);
+        const x1=rx*Math.cos(a1), y1=ry*Math.sin(a1);
+        cum.push(cum[k-1]+Math.hypot(x1-x0,y1-y0));
+    }
+    return {cum, perim:cum[samples], samples};
 }
-const OVAL_PERIM = ovalCum[OVAL_SAMPLES];
-function ovalAngleAt(len){
-    len=((len%OVAL_PERIM)+OVAL_PERIM)%OVAL_PERIM;
-    let lo=0, hi=OVAL_SAMPLES;
-    while(lo<hi){ const mid=(lo+hi)>>1; if(ovalCum[mid]<len) lo=mid+1; else hi=mid; }
+function ovalAngleAt(tab, len){
+    const perim=tab.perim;
+    len=((len%perim)+perim)%perim;
+    let lo=0, hi=tab.samples;
+    while(lo<hi){ const mid=(lo+hi)>>1; if(tab.cum[mid]<len) lo=mid+1; else hi=mid; }
     const i=Math.max(1,lo);
-    const l0=ovalCum[i-1], l1=ovalCum[i];
+    const l0=tab.cum[i-1], l1=tab.cum[i];
     const f=l1>l0?(len-l0)/(l1-l0):0;
-    return ((i-1+f)/OVAL_SAMPLES)*2*Math.PI;
+    return ((i-1+f)/tab.samples)*2*Math.PI;
 }
-// START 在 225°：先算 225° 對應的弧長，再等弧長放格
-const OVAL_START_LEN = (function(){
-    const frac=(OVAL_START_DEG*Math.PI/180)/(2*Math.PI);
-    const idx=frac*OVAL_SAMPLES;
+function ovalStartLen(tab, deg){
+    const frac=(deg*Math.PI/180)/(2*Math.PI);
+    const idx=frac*tab.samples;
     const i0=Math.floor(idx), f=idx-i0;
-    return ovalCum[i0]+(ovalCum[Math.min(i0+1,OVAL_SAMPLES)]-ovalCum[i0])*f;
-})();
-// 站點：0–29 沿橢圓順時針一圈，等弧長排列；每格記下橢圓角（供切線角用）
-const sPoints = Array.from({length:30},(_,i)=>{
-    const a=ovalAngleAt(OVAL_START_LEN + i*(OVAL_PERIM/30));
-    return {
-        x: Math.round(OVAL_CX + OVAL_RX*Math.cos(a)),
-        y: Math.round(OVAL_CY + OVAL_RY*Math.sin(a)),
-        _a: a
-    };
-});
+    return tab.cum[i0]+(tab.cum[Math.min(i0+1,tab.samples)]-tab.cum[i0])*f;
+}
+function ovalLoopPoints(loop){
+    const tab=ovalTable(loop.rx, loop.ry, 720);
+    const startLen=ovalStartLen(tab, loop.startDeg);
+    const step=tab.perim/loop.n;
+    const pts=[];
+    for(let i=0;i<loop.n;i++){
+        const a=ovalAngleAt(tab, startLen+i*step);
+        pts.push({
+            x: Math.round(OVAL_CX+loop.rx*Math.cos(a)),
+            y: Math.round(OVAL_CY+loop.ry*Math.sin(a)),
+            _a: a, _rx: loop.rx, _ry: loop.ry
+        });
+    }
+    return pts;
+}
+// 站點：外圈 0–19＋內圈 20–29，等弧長排列；每格記下橢圓角與半徑（供切線角用）
+const sPoints = [...ovalLoopPoints(OUTER), ...ovalLoopPoints(INNER)];
 
 // LOVE 終點：在橢圓中心（旅程的心）
-sPoints.push({x: OVAL_CX, y: OVAL_CY, _a: 0});
+sPoints.push({x: OVAL_CX, y: OVAL_CY, _a: 0, _rx: 0, _ry: 0});
 
 // 每格切線角（格子長軸順著路徑）與鵝卵石造型（依 index 固定，穩定不跳動）
 function tileTangent(i){
     if(i===30) return 0;
-    const a=sPoints[i]._a;
-    return Math.atan2(OVAL_RY*Math.cos(a), -OVAL_RX*Math.sin(a))*180/Math.PI;
+    const p=sPoints[i];
+    return Math.atan2(p._ry*Math.cos(p._a), -p._rx*Math.sin(p._a))*180/Math.PI;
 }
 function tileShape(i){
     if(i===0) return {cls:"shape-start", len:215, wid:175};
