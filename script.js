@@ -946,7 +946,7 @@ div.innerHTML='<div class="space-inner"><span class="space-big">'+ICON_START+'</
 
 }else if(isGoal){
 
-div.innerHTML='<div class="space-inner"><span class="space-big">'+ICON_GOAL+'</span><span class="space-name">LOVE 終點</span></div>';
+div.innerHTML='<div class="space-inner"><span class="space-name">LOVE 終點</span></div>';
 
 }else{
 
@@ -961,6 +961,62 @@ board.appendChild(div);
 
 addLoveFlowers();
 
+drawBoardArt();
+
+}
+
+// -------------------------------
+// 棋盤圖（分層第一層）：照真格子的位置與形狀，用 SVG 畫出一張漂亮的棋盤圖
+// 真格子（HTML）在上面一層是透明的，只留數字/圖示/名稱與發光，
+// 所以表面看起來就是一張棋盤圖，但遊戲邏輯仍走真格子，娃娃一定站在正確格上。
+// -------------------------------
+const ART_HEART_D="M120,210 C60,160 20,120 20,80 C20,45 45,20 80,20 C100,20 115,30 120,45 C125,30 140,20 160,20 C195,20 220,45 220,80 C220,120 180,160 120,210 Z";
+function drawBoardArt(){
+    const art=document.getElementById("boardArt");
+    if(!art) return;
+    const NS="http://www.w3.org/2000/svg";
+    const mk=(tag,attrs,parent)=>{
+        const el=document.createElementNS(NS,tag);
+        for(const k in attrs) el.setAttribute(k,attrs[k]);
+        (parent||art).appendChild(el);
+        return el;
+    };
+    // 漸層（水彩感：中心亮、邊緣略深）
+    const defs=mk("defs",{});
+    const grads={
+        cream:[["0%","#fdf8ec"],["55%","#f5e6c8"],["100%","#e3cf9f"]],
+        gold:[["0%","#fffbe0"],["45%","#ffe89a"],["75%","#ffd24d"],["100%","#f5b81e"]],
+        dark:[["0%","#7a8494"],["55%","#4b5563"],["100%","#333d4f"]],
+        pink:[["0%","#ffd6ea"],["55%","#ff9ecf"],["100%","#ff5fa8"]]
+    };
+    for(const name in grads){
+        const g=mk("radialGradient",{id:"art"+name,cx:"50%",cy:"35%",r:"68%"},defs);
+        grads[name].forEach(([o,c])=>mk("stop",{offset:o,"stop-color":c},g));
+    }
+    const side={cream:"#a08a6a",gold:"#b8892a",dark:"#2e3748",pink:"#c4487a"};
+    const stroke={cream:"rgba(120,100,70,.35)",gold:"rgba(180,130,20,.55)",dark:"rgba(40,50,65,.5)",pink:"rgba(255,255,255,.55)"};
+    const kindOf=t=>t==="god"?"gold":t==="trial"?"dark":(t==="start"||t==="goal")?"pink":"cream";
+    spaces.forEach((space,index)=>{
+        const cx=sPoints[index].x, cy=sPoints[index].y;
+        const sh=space.shape, kind=kindOf(space.type);
+        const rot=space.rot||0;
+        // 遇見神格加一圈淡淡金光暈
+        if(space.type==="god"){
+            mk("ellipse",{cx,cy,rx:sh.len/2+14,ry:sh.wid/2+14,fill:"rgba(255,200,60,.28)"});
+        }
+        const drawShape=(dy,fill,sw)=>{
+            const g=mk("g",{transform:`translate(${cx} ${cy+dy}) rotate(${rot})`});
+            if(space.shape.cls==="shape-love"){
+                mk("path",{d:ART_HEART_D,transform:"translate(-120 -120)",fill,stroke:sw,"stroke-width":2},g);
+            }else if(space.shape.cls==="shape-start"){
+                mk("rect",{x:-sh.len/2,y:-sh.wid/2,width:sh.len,height:sh.wid,rx:sh.wid/2,fill,stroke:sw,"stroke-width":2},g);
+            }else{
+                mk("ellipse",{cx:0,cy:0,rx:sh.len/2,ry:sh.wid/2,fill,stroke:sw,"stroke-width":2},g);
+            }
+        };
+        drawShape(12,side[kind],side[kind]);   // 石頭厚度（往下 12px 的深色底）
+        drawShape(0,`url(#art${kind})`,stroke[kind]);
+    });
 }
 
 // -------------------------------
