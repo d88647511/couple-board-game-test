@@ -3074,3 +3074,51 @@ box-shadow:0 0 12px rgba(255,215,110,.5),0 4px 10px rgba(0,0,0,.3);
     from{transform:translateX(-25vw);}
     to{transform:translateX(125vw);}
 }
+
+/* =========================
+   分層棋盤圖（2026-11-28）：棋盤圖在下、真格子透明在上
+   棋盤圖（#boardArt，z 3）照真格子位置畫出鵝卵石、金格、試煉格與愛心；
+   真格子（#board，z 4）背景與邊框全透明，只留數字/圖示/名稱與當前格發光，
+   所以表面看起來就是一張漂亮的棋盤圖，但遊戲邏輯仍走真格子。
+========================= */
+#boardArt{
+    position:absolute;
+    left:0;
+    top:0;
+    width:2400px;
+    height:1650px;
+    pointer-events:none;
+    z-index:3;
+}
+#board{ z-index:4; }
+#starLayer{ z-index:5; }
+.space{
+    background:transparent !important;
+    border-color:transparent !important;
+    box-shadow:none !important;
+}
+.space.active{
+    box-shadow:
+        0 0 0 3px rgba(255,215,0,.9),
+        0 0 32px rgba(255,200,60,.85),
+        0 0 16px rgba(255,255,255,.9) !important;
+}
+/* 數字與名稱去掉白底小 pill，直接印在棋盤圖上（像設計圖那樣） */
+.space-num{
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    text-shadow:0 1px 2px rgba(255,255,255,.8);
+}
+.space.trial .space-num{ color:#e8edf3 !important; text-shadow:0 1px 3px rgba(0,0,0,.5); }
+.space-name{
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    text-shadow:0 1px 3px rgba(255,255,255,.75);
+}
+.space.trial .space-name{ text-shadow:0 1px 3px rgba(0,0,0,.55); }
+.space.start .space-name, .space.goal .space-name{
+    color:#fff !important;
+    text-shadow:0 1px 4px rgba(150,40,90,.55);
+}
