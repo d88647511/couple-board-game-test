@@ -579,6 +579,7 @@ let activeTeamCount = 5;
 const board = document.getElementById("board");
 
 const roadLayer = document.getElementById("roadLayer");
+const starLayer = document.getElementById("starLayer");
 
 // -------------------------------
 // 建立格子
@@ -966,6 +967,8 @@ addLoveFlowers();
 // 畫道路（平滑 S 型曲線）
 // -------------------------------
 
+const STAR_D="M0,-10 L2.4,-3.3 L9.5,-3.1 L3.9,1.3 L5.9,8.1 L0,4.1 L-5.9,8.1 L-3.9,1.3 L-9.5,-3.1 L-2.4,-3.3 Z";
+
 function drawRoads(){
 
 const pts = spaces.map(s=>({x:s.x+41, y:s.y+41}));
@@ -988,6 +991,15 @@ for(let i=0;i<pts.length-1;i++){
 
     d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
 
+    // 星星指引線：每段路中間放一顆小星星（貝茲曲線 t=0.5 的點，剛好落在兩格之間的空隙）
+    const mx=0.125*p1.x+0.375*c1x+0.375*c2x+0.125*p2.x;
+    const my=0.125*p1.y+0.375*c1y+0.375*c2y+0.125*p2.y;
+    const star=document.createElementNS("http://www.w3.org/2000/svg","path");
+    star.setAttribute("d", STAR_D);
+    star.setAttribute("transform", `translate(${mx} ${my})`);
+    star.classList.add("road-star");
+    starLayer.appendChild(star);
+
 }
 
 const wall=document.createElementNS("http://www.w3.org/2000/svg","path");
@@ -1005,14 +1017,6 @@ surface.setAttribute("d", d);
 surface.classList.add("road-surface");
 
 roadLayer.appendChild(surface);
-
-const dash=document.createElementNS("http://www.w3.org/2000/svg","path");
-
-dash.setAttribute("d", d);
-
-dash.classList.add("road-dash");
-
-roadLayer.appendChild(dash);
 
 }
 
