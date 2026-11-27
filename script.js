@@ -1192,9 +1192,9 @@ winnerSound.volume = 1.0;
 const godEventSound = new Audio(GOD_EVENT_SOUND_DATA_URI);
 godEventSound.volume = 0.6;
 
-// 暫代音效：assets/audio/trial-event.mp3 不存在（404），先以 end.mp3 暫代；
-// 待 Peng 提供真實 god/trial 音檔後改回 assets/audio/ 路徑。
-const trialEventSound = new Audio("end.mp3");
+// 婚姻試煉音效：風雨欲來（trial-sound-data.js，base64 data URI 內嵌；
+// 原始 MP3 母檔在 ~/workspace/trial-event.mp3）
+const trialEventSound = new Audio(TRIAL_EVENT_SOUND_DATA_URI);
 trialEventSound.volume = 0.6;
 
 function playEventSound(type){
