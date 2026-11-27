@@ -1071,8 +1071,8 @@ function placePieces() {
         const angle = (70 + t * 165) * Math.PI / 180;   // 70°~235°，扇形佈於 START 開放側
         const wx = cx + Math.cos(angle) * WAIT_R;
         const wy = cy + Math.sin(angle) * WAIT_R;
-        piece.style.left = (wx - 22) + "px";
-        piece.style.top = (wy - 28) + "px";
+        piece.style.left = (wx - 32) + "px";
+        piece.style.top = (wy - 44) + "px";
     });
 
     // 已入場：為每個位置的棋子計算偏移並定位
@@ -1085,15 +1085,15 @@ function placePieces() {
         indices.forEach((idx, i) => {
             const piece = document.getElementById("piece" + idx);
             const { dx, dy } = getPieceOffset(count, i);
-            piece.style.left = (p.x + 19 + dx) + "px";
-            piece.style.top = (p.y + 13 + dy) + "px";
+            piece.style.left = (p.x + 9 + dx) + "px";
+            piece.style.top = (p.y - 3 + dy) + "px";
         });
     });
 }
 
 function getPieceOffset(count, i) {
-    const spacing = 18; // 基礎間距
-    const radius = 14;  // 排列半徑
+    const spacing = 34; // 基礎間距
+    const radius = 26;  // 排列半徑
 
     if (count === 1) {
         return { dx: 0, dy: 0 };
@@ -1345,7 +1345,11 @@ movePiece(finalValue);
 
 function moveStep(now,target,finish){
 
+const piece=document.getElementById("piece"+currentTeam);
+
 if(now>=target){
+
+piece.classList.remove("walking");
 
 finish();
 
@@ -1353,13 +1357,13 @@ return;
 
 }
 
-const piece=document.getElementById("piece"+currentTeam);
+piece.classList.add("walking");
 
 const next=spaces[now+1];
 
-piece.style.left=(next.x+19+(currentTeam%2)*10)+"px";
+piece.style.left=(next.x+9+(currentTeam%2)*24)+"px";
 
-piece.style.top=(next.y+13+Math.floor(currentTeam/2)*10)+"px";
+piece.style.top=(next.y-3+Math.floor(currentTeam/2)*24)+"px";
 highlightCell(now + 1);
 
 spotlightTeam(currentTeam);
@@ -1666,9 +1670,11 @@ if(!team.entered){
 
     const el=document.getElementById("piece"+currentTeam);
 
-    el.style.left=(sp.x+19+(currentTeam%2)*10)+"px";
+    el.classList.add("walking");
 
-    el.style.top=(sp.y+13+Math.floor(currentTeam/2)*10)+"px";
+    el.style.left=(sp.x+9+(currentTeam%2)*24)+"px";
+
+    el.style.top=(sp.y-3+Math.floor(currentTeam/2)*24)+"px";
 
     highlightCell(0);
 
@@ -1800,8 +1806,8 @@ if(!piece) return;
 const px=parseFloat(piece.style.left)||0;
 const py=parseFloat(piece.style.top)||0;
 
-const cx=px+22;
-const cy=projectY(py+28);
+const cx=px+32;
+const cy=projectY(py+44);
 
 const vw=viewport.clientWidth;
 const vh=viewport.clientHeight;
