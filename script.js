@@ -283,47 +283,28 @@ function projectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) * TILT_COS; }
 function unprojectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) / TILT_COS; }
 
 // ───────────────────────────────
-// S 型婚姻旅程道路 Layout（圓形棋盤格）
-// 5 列 × 6 站（0–29）蛇形蜿蜒向下，LOVE(30) 在最底部右端
-// 所有站點與道路都必須完整落在「底層面板（#boardGround）」內，
-// 四周保留合理空白。座標由面板幾何自適應算出。
+// 自然彎曲的橢圓旅程（參考圖：石板沿橢圓弧線排列，不再是整齊蛇形）
+// 0–29 沿橢圓一圈（START 在左上方，順時針），LOVE(30) 在橢圓中心。
+// 背景的綠色底圖與樹木已拿掉，棋盤直接落在天空底色上。
 // ───────────────────────────────
-const PANEL_L = 60, PANEL_T = 60;          // 底層面板左上（#boardGround）
-const PANEL_W = 2280, PANEL_H = 1530;      // 底層面板尺寸（固定世界邊界）
+const CIRCLE_R = 95;                       // 普通格半徑（直徑 190，配合橢圓間距，格子剛好相接）
+const BIG_R    = 108;                      // START / LOVE 半徑（直徑 216）
 
-const CIRCLE_R = 105;                      // 普通圓形棋盤格半徑（直徑 210）
-const BIG_R    = 120;                      // START / LOVE 半徑（直徑 240）
-const S_MARGIN = 80;                       // 圓形格外緣距面板邊界的空白
+const OVAL_CX = 1200, OVAL_CY = 825;       // 橢圓中心（棋盤 2400×1650 的中心）
+const OVAL_RX = 1080, OVAL_RY = 700;       // 橢圓半徑（周長約 5650，30 格間距約 189）
+const OVAL_START_DEG = 225;                // START 在左上方（225°）
 
-const S_COLS = 6;                          // 每列站點數
-const HX = 330;                            // 水平中心間距（圓間保有道路空間）
-const VY = 295;                            // 垂直中心間距
-
-// 6 欄的 x：左緣留白 = S_MARGIN
-const colX = (c) => PANEL_L + S_MARGIN + CIRCLE_R + c * HX;
-// 5 列在面板內垂直置中
-const rowsExtent = 5 * (CIRCLE_R*2) + 4 * (VY - CIRCLE_R*2);   // 圓直徑×5 + 4×圓間隙
-const rowTopY = PANEL_T + (PANEL_H - rowsExtent) / 2 + CIRCLE_R;
-const rowY = (r) => rowTopY + r * VY;
-
-// 站點：0–29 蛇形，偶數列 左→右、奇數列 右→左；S 一路蜿蜒向下
+// 站點：0–29 沿橢圓順時針一圈，等角度排列
 const sPoints = Array.from({length:30},(_,i)=>{
-    const r = Math.floor(i / S_COLS);
-    const c0 = i % S_COLS;
-    const c = (r % 2 === 0) ? c0 : (S_COLS - 1 - c0);
+    const a = (OVAL_START_DEG + i*(360/30)) * Math.PI/180;
     return {
-        x: Math.round(colX(c)),
-        y: Math.round(rowY(r))
+        x: Math.round(OVAL_CX + OVAL_RX*Math.cos(a)),
+        y: Math.round(OVAL_CY + OVAL_RY*Math.sin(a))
     };
 });
 
-// LOVE 終點：位於最後一站(29)右側，底部右端
-const lastR = Math.floor(29 / S_COLS);                 // 4
-const lastC = S_COLS - 1;                               // 5
-sPoints.push({
-    x: Math.round(colX(lastC) + BIG_R + CIRCLE_R + 10),
-    y: Math.round(rowY(lastR))
-});
+// LOVE 終點：在橢圓中心（旅程的心）
+sPoints.push({x: OVAL_CX, y: OVAL_CY});
 
 // 格子資料：固定題目模式（index 0 = START, index 30 = GOAL）
 const spaceDefs = [
@@ -1068,11 +1049,11 @@ function placePieces() {
     const n = waiting.length;
     const cx = startC.x + 41;
     const cy = startC.y + 41;
-    const WAIT_R = 150;
+    const WAIT_R = 110;
     waiting.forEach((idx, i) => {
         const piece = document.getElementById("piece" + idx);
         const t = (n === 1) ? 0.5 : (i / (n - 1));
-        const angle = (70 + t * 165) * Math.PI / 180;   // 70°~235°，扇形佈於 START 開放側
+        const angle = (200 + t * 75) * Math.PI / 180;   // 200°~275°，扇形佈於 START 左上開放側（避開相鄰的 29、1 號格）
         const wx = cx + Math.cos(angle) * WAIT_R;
         const wy = cy + Math.sin(angle) * WAIT_R;
         piece.style.left = (wx - 32) + "px";
@@ -1190,19 +1171,6 @@ diceSound.volume = 0.8;
 // 預載骰子音效：頁面一開就開始載，否則第一次擲骰要等音檔下載，骰子先轉、聲音才出。
 diceSound.preload = "auto";
 diceSound.load();
-
-// 預熱音效：第一次點按頁面時以靜音播一次，把音檔解碼好，之後擲骰才會立刻出聲。
-window.addEventListener("pointerdown", function warmUpDiceSound(){
-    const v=diceSound.volume;
-    diceSound.volume=0;
-    const p=diceSound.play();
-    if(p && p.then){
-        p.then(()=>{ diceSound.pause(); diceSound.currentTime=0; diceSound.volume=v; })
-         .catch(()=>{ diceSound.volume=v; });
-    } else {
-        diceSound.volume=v;
-    }
-}, {once:true});
 
 const winnerSound = new Audio("winner.mp3");
 
