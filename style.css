@@ -1554,10 +1554,10 @@ contain:content;
 }
 
 @keyframes bounce {
-    0% { transform: translateY(0) scale(1); }
-    35% { transform: translateY(-18px) scale(1.08); }
-    70% { transform: translateY(-6px) scale(1.03); }
-    100% { transform: translateY(0) scale(1); }
+    0% { transform: translateY(0) rotateX(-45deg) scale(1); }
+    35% { transform: translateY(-18px) rotateX(-45deg) scale(1.08); }
+    70% { transform: translateY(-6px) rotateX(-45deg) scale(1.03); }
+    100% { transform: translateY(0) rotateX(-45deg) scale(1); }
 }
 
 .piece.jump {
@@ -2967,4 +2967,68 @@ opacity:.85;
 @keyframes blTextEnter{
     from{opacity:0;transform:scale(.95)}
     to{opacity:1;transform:scale(1)}
+}
+/* ============================================================
+   CSS 3D 輕量版（45° 透視）
+   在 2.5D 的 rotateX(45deg) 基礎上加 perspective，讓近處格子
+   變大、遠處變小，桌板與格子有真厚度。
+   透視值刻意取大（1800px），讓鏡頭的 cos45 近似計算仍準；
+   若瀏覽器把中間層壓平（flatten），會優雅退回 2.5D 樣子。
+   ============================================================ */
+#boardViewport{
+    perspective:1800px;
+}
+#boardContainer{
+    transform-style:preserve-3d;
+}
+#boardTilt{
+    position:relative;
+    width:2400px;
+    height:1650px;
+    transform:rotateX(45deg);
+    transform-origin:50% 50%;
+    transform-style:preserve-3d;
+}
+/* 桌板：往後沉 26px + 加厚底邊，像放在桌上的桌板 */
+#boardGround{
+    transform:translateZ(-26px);
+    box-shadow:
+        inset 0 2px 20px rgba(255,255,255,.35),
+        inset 0 -4px 16px rgba(0,0,0,.06),
+        0 22px 0 #b3905f,
+        0 34px 44px rgba(60,35,10,.35);
+}
+/* 格子：浮起 12px + 加厚底邊，變成立體圓盤地磚 */
+.space{
+    transform:translateZ(12px);
+    box-shadow:
+        inset 0 3px 5px rgba(255,255,255,.85),
+        inset 0 -6px 10px rgba(0,0,0,.06),
+        0 12px 0 #c9a882,
+        0 20px 22px rgba(0,0,0,.18);
+}
+.space:hover{
+    transform:translateZ(12px) scale(1.04);
+}
+#boardViewport.dragging .space:hover{
+    transform:translateZ(12px);
+}
+.space.start,.space.goal{
+    box-shadow:
+        inset 0 3px 6px rgba(255,255,255,.5),
+        0 14px 0 #c4487a,
+        0 22px 26px rgba(0,0,0,.2);
+}
+.space.active{
+    box-shadow:
+        0 0 0 4px #ffd700,
+        0 0 44px rgba(255,200,60,.95),
+        0 0 16px rgba(255,255,255,.9),
+        0 12px 0 #c9a882,
+        0 20px 22px rgba(0,0,0,.18);
+}
+/* 人偶：反轉回來站立，腳底貼在格子上 */
+.piece{
+    transform:rotateX(-45deg);
+    transform-origin:50% 100%;
 }

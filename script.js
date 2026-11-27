@@ -271,6 +271,17 @@ onValue(ref(db, "host/repair"), (snapshot) => {
 const BOARD_W = 2400;
 const BOARD_H = 1650;
 
+// ---------- CSS 3D 傾斜投影（與 style.css 的 rotateX(45deg) + perspective 對應） ----------
+// 正交部分：傾斜後畫面上的 y = 825 + (y - 825) * cos45，x 不變。
+// 透視（1800px）會再讓近處略大、遠處略小，cos45 仍是很好的近似值。
+const TILT_DEG = 45;
+const TILT_COS = Math.cos(TILT_DEG * Math.PI / 180); // ≈ 0.7071
+const TILT_ORIGIN_Y = BOARD_H / 2;                   // 825
+const BOARD_PH = BOARD_H * TILT_COS;                 // 傾斜後棋盤畫面高度 ≈ 1167
+const BOARD_PT = (BOARD_H - BOARD_PH) / 2;           // 傾斜後棋盤頂部留白 ≈ 242
+function projectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) * TILT_COS; }
+function unprojectY(y){ return TILT_ORIGIN_Y + (y - TILT_ORIGIN_Y) / TILT_COS; }
+
 // ───────────────────────────────
 // S 型婚姻旅程道路 Layout（圓形棋盤格）
 // 5 列 × 6 站（0–29）蛇形蜿蜒向下，LOVE(30) 在最底部右端
@@ -1591,12 +1602,11 @@ alert(
 }
 
 // -------------------------------
-// 覆寫 movePiece
-// (加入終點判斷)
+// 移動棋子（加入終點判斷）
 // -------------------------------
 
 
-movePiece=function(step){
+function movePiece(step){
 
 const team=teams[currentTeam];
 
@@ -1709,7 +1719,8 @@ const vw=viewport.clientWidth;
 const vh=viewport.clientHeight;
 
 const cw=BOARD_W*viewScale;
-const ch=BOARD_H*viewScale;
+const ch=BOARD_PH*viewScale;
+const top=BOARD_PT*viewScale;
 
 if(cw<=vw){
     viewX=(vw-cw)/2;
@@ -1718,9 +1729,9 @@ if(cw<=vw){
 }
 
 if(ch<=vh){
-    viewY=(vh-ch)/2;
+    viewY=(vh-ch)/2 - top;
 }else{
-    viewY=Math.max(vh-ch, Math.min(0, viewY));
+    viewY=Math.max(vh-(top+ch), Math.min(-top, viewY));
 }
 
 }
@@ -1790,7 +1801,7 @@ const px=parseFloat(piece.style.left)||0;
 const py=parseFloat(piece.style.top)||0;
 
 const cx=px+22;
-const cy=py+28;
+const cy=projectY(py+28);
 
 const vw=viewport.clientWidth;
 const vh=viewport.clientHeight;
@@ -1819,11 +1830,11 @@ function cameraToFit(){
 const vw=viewport.clientWidth;
 const vh=viewport.clientHeight;
 
-const s=Math.min(vw/BOARD_W, vh/BOARD_H)*0.95;
+const s=Math.min(vw/BOARD_W, vh/BOARD_PH)*0.95;
 
 return {
     x:(vw-BOARD_W*s)/2,
-    y:(vh-BOARD_H*s)/2,
+    y:(vh-BOARD_PH*s)/2 - BOARD_PT*s,
     s:s
 };
 
@@ -1843,7 +1854,7 @@ const spread=340;   // 地圖座標半徑（涵蓋 START 圓格 + 扇形角色�
 const s=Math.max(zoomMinScale(), Math.min(ZOOM_MAX, Math.min(vw/(spread*2), vh/(spread*2))));
 
 // 中心略偏右上，好讓位於 START 左/下方的角色也入鏡
-const fx=sx-60, fy=sy-40;
+const fx=sx-60, fy=projectY(sy-40);
 
 return { x: vw/2 - fx*s, y: vh/2 - fy*s, s:s };
 
@@ -2003,11 +2014,11 @@ newScale=Math.max(zoomMinScale(),Math.min(ZOOM_MAX,newScale));
 
 // 縮放前後，錨點下的棋盤座標保持不動
 const bx=(ax-viewX)/viewScale;
-const by=(ay-viewY)/viewScale;
+const by=unprojectY((ay-viewY)/viewScale);
 
 viewScale=newScale;
 viewX=ax-bx*viewScale;
-viewY=ay-by*viewScale;
+viewY=ay-projectY(by)*viewScale;
 
 clampView();
 applyView();
