@@ -605,7 +605,7 @@ const SPACE_ICONS={
 
 5:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43" rx="12" ry="3" fill="rgba(180,140,60,.15)"/>
 <ellipse cx="24" cy="14" rx="6" ry="2.8" fill="#fff8e0" opacity=".6"/>
-<circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
+<circle cx="24" cy="23" r="14" fill="#fff8e0" opacity=".55"/><circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
 <circle cx="24" cy="23" r="7.5" fill="#fff8e8"/>
 <circle cx="21.2" cy="21.5" r="1.2" fill="#7a5a2a"/><circle cx="26.8" cy="21.5" r="1.2" fill="#7a5a2a"/>
 <path d="M21.5 25.5 Q24 28 26.5 25.5" stroke="#c9963a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
@@ -613,7 +613,7 @@ const SPACE_ICONS={
 <path d="M17 34 L24 33 L31 34 L33 42 Q24 44.5 15 42 Z" fill="url(#wgGod)" stroke="rgba(210,170,80,.4)"/>
 <rect x="22.5" y="31" width="3" height="5" rx="1" fill="#fff" opacity=".85"/>
 <line x1="24" y1="28" x2="24" y2="31" stroke="#e8c86a" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M22 9.5 L24 7.5 L26 9.5 M23 9.5 L23 12 M25 9.5 L25 12" stroke="#e8c86a" stroke-width="1" stroke-linecap="round" fill="none"/>
+<ellipse cx="24" cy="6" rx="5.5" ry="1.6" fill="none" stroke="#f0c95c" stroke-width="1.6" opacity=".95"/><path d="M9 10 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" fill="#ffe9a8" opacity=".95"/><path d="M38 12 l0.8 1.9 1.9 0.8 -1.9 0.8 -0.8 1.9 -0.8 -1.9 -1.9 -0.8 1.9 -0.8 Z" fill="#fff3c4" opacity=".9"/>
 <ellipse cx="18.5" cy="18" rx="3" ry="1.6" fill="#fff" opacity=".5" transform="rotate(-25 18.5 18)"/></svg>`,
 
 6:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43" rx="11" ry="2.8" fill="rgba(120,80,50,.14)"/>
@@ -657,13 +657,13 @@ const SPACE_ICONS={
 
 11:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43.5" rx="13" ry="3" fill="rgba(50,55,65,.18)"/>
 <circle cx="17" cy="24" r="7.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
-<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
+<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/><circle cx="30.5" cy="17" r="5" fill="#4b5563" opacity=".45"/>
 <circle cx="34" cy="25" r="6.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
 <ellipse cx="25" cy="25" rx="16" ry="6" fill="#4b5563" stroke="rgba(75,85,99,.45)" stroke-width="1.2"/>
 <ellipse cx="20" cy="20" rx="4" ry="2" fill="#9ca3af" opacity=".45"/>
 <path d="M19 28 L21 33 L18 33 L20 38" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
 <path d="M28 27 L30 32 L27 32 L29 37" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
-<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/>
+<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/><path d="M32 32 L34 35.5 L31.5 35.5 L33.5 39.5" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8"/><path d="M14 30 L15.5 34 L13 34 L14.5 38" stroke="#a0aec0" stroke-width="1.1" stroke-linecap="round" fill="none" opacity=".6"/>
 <path d="M12 18 Q14 15 16 18" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/>
 <path d="M30 14 Q32 11 34 14" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/></svg>`,
 
@@ -689,7 +689,7 @@ const SPACE_ICONS={
 
 15:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43" rx="12" ry="3" fill="rgba(180,140,60,.15)"/>
 <ellipse cx="24" cy="14" rx="6" ry="2.8" fill="#fff8e0" opacity=".6"/>
-<circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
+<circle cx="24" cy="23" r="14" fill="#fff8e0" opacity=".55"/><circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
 <circle cx="24" cy="23" r="7.5" fill="#fff8e8"/>
 <circle cx="21.2" cy="21.5" r="1.2" fill="#7a5a2a"/><circle cx="26.8" cy="21.5" r="1.2" fill="#7a5a2a"/>
 <path d="M21.5 25.5 Q24 28 26.5 25.5" stroke="#c9963a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
@@ -697,7 +697,7 @@ const SPACE_ICONS={
 <path d="M17 34 L24 33 L31 34 L33 42 Q24 44.5 15 42 Z" fill="url(#wgGod)" stroke="rgba(210,170,80,.4)"/>
 <rect x="22.5" y="31" width="3" height="5" rx="1" fill="#fff" opacity=".85"/>
 <line x1="24" y1="28" x2="24" y2="31" stroke="#e8c86a" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M22 9.5 L24 7.5 L26 9.5 M23 9.5 L23 12 M25 9.5 L25 12" stroke="#e8c86a" stroke-width="1" stroke-linecap="round" fill="none"/>
+<ellipse cx="24" cy="6" rx="5.5" ry="1.6" fill="none" stroke="#f0c95c" stroke-width="1.6" opacity=".95"/><path d="M9 10 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" fill="#ffe9a8" opacity=".95"/><path d="M38 12 l0.8 1.9 1.9 0.8 -1.9 0.8 -0.8 1.9 -0.8 -1.9 -1.9 -0.8 1.9 -0.8 Z" fill="#fff3c4" opacity=".9"/>
 <ellipse cx="18.5" cy="18" rx="3" ry="1.6" fill="#fff" opacity=".5" transform="rotate(-25 18.5 18)"/></svg>`,
 
 16:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="42.5" rx="12" ry="3" fill="rgba(120,60,90,.12)"/>
@@ -730,13 +730,13 @@ const SPACE_ICONS={
 
 19:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43.5" rx="13" ry="3" fill="rgba(50,55,65,.18)"/>
 <circle cx="17" cy="24" r="7.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
-<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
+<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/><circle cx="30.5" cy="17" r="5" fill="#4b5563" opacity=".45"/>
 <circle cx="34" cy="25" r="6.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
 <ellipse cx="25" cy="25" rx="16" ry="6" fill="#4b5563" stroke="rgba(75,85,99,.45)" stroke-width="1.2"/>
 <ellipse cx="20" cy="20" rx="4" ry="2" fill="#9ca3af" opacity=".45"/>
 <path d="M19 28 L21 33 L18 33 L20 38" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
 <path d="M28 27 L30 32 L27 32 L29 37" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
-<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/>
+<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/><path d="M32 32 L34 35.5 L31.5 35.5 L33.5 39.5" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8"/><path d="M14 30 L15.5 34 L13 34 L14.5 38" stroke="#a0aec0" stroke-width="1.1" stroke-linecap="round" fill="none" opacity=".6"/>
 <path d="M12 18 Q14 15 16 18" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/>
 <path d="M30 14 Q32 11 34 14" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/></svg>`,
 
@@ -774,7 +774,7 @@ const SPACE_ICONS={
 
 23:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43" rx="12" ry="3" fill="rgba(180,140,60,.15)"/>
 <ellipse cx="24" cy="14" rx="6" ry="2.8" fill="#fff8e0" opacity=".6"/>
-<circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
+<circle cx="24" cy="23" r="14" fill="#fff8e0" opacity=".55"/><circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
 <circle cx="24" cy="23" r="7.5" fill="#fff8e8"/>
 <circle cx="21.2" cy="21.5" r="1.2" fill="#7a5a2a"/><circle cx="26.8" cy="21.5" r="1.2" fill="#7a5a2a"/>
 <path d="M21.5 25.5 Q24 28 26.5 25.5" stroke="#c9963a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
@@ -782,18 +782,18 @@ const SPACE_ICONS={
 <path d="M17 34 L24 33 L31 34 L33 42 Q24 44.5 15 42 Z" fill="url(#wgGod)" stroke="rgba(210,170,80,.4)"/>
 <rect x="22.5" y="31" width="3" height="5" rx="1" fill="#fff" opacity=".85"/>
 <line x1="24" y1="28" x2="24" y2="31" stroke="#e8c86a" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M22 9.5 L24 7.5 L26 9.5 M23 9.5 L23 12 M25 9.5 L25 12" stroke="#e8c86a" stroke-width="1" stroke-linecap="round" fill="none"/>
+<ellipse cx="24" cy="6" rx="5.5" ry="1.6" fill="none" stroke="#f0c95c" stroke-width="1.6" opacity=".95"/><path d="M9 10 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" fill="#ffe9a8" opacity=".95"/><path d="M38 12 l0.8 1.9 1.9 0.8 -1.9 0.8 -0.8 1.9 -0.8 -1.9 -1.9 -0.8 1.9 -0.8 Z" fill="#fff3c4" opacity=".9"/>
 <ellipse cx="18.5" cy="18" rx="3" ry="1.6" fill="#fff" opacity=".5" transform="rotate(-25 18.5 18)"/></svg>`,
 
 24:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43.5" rx="13" ry="3" fill="rgba(50,55,65,.18)"/>
 <circle cx="17" cy="24" r="7.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
-<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
+<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/><circle cx="30.5" cy="17" r="5" fill="#4b5563" opacity=".45"/>
 <circle cx="34" cy="25" r="6.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
 <ellipse cx="25" cy="25" rx="16" ry="6" fill="#4b5563" stroke="rgba(75,85,99,.45)" stroke-width="1.2"/>
 <ellipse cx="20" cy="20" rx="4" ry="2" fill="#9ca3af" opacity=".45"/>
 <path d="M19 28 L21 33 L18 33 L20 38" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
 <path d="M28 27 L30 32 L27 32 L29 37" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
-<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/>
+<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/><path d="M32 32 L34 35.5 L31.5 35.5 L33.5 39.5" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8"/><path d="M14 30 L15.5 34 L13 34 L14.5 38" stroke="#a0aec0" stroke-width="1.1" stroke-linecap="round" fill="none" opacity=".6"/>
 <path d="M12 18 Q14 15 16 18" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/>
 <path d="M30 14 Q32 11 34 14" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/></svg>`,
 
@@ -805,19 +805,19 @@ const SPACE_ICONS={
 
 26:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43.5" rx="13" ry="3" fill="rgba(50,55,65,.18)"/>
 <circle cx="17" cy="24" r="7.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
-<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
+<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/><circle cx="30.5" cy="17" r="5" fill="#4b5563" opacity=".45"/>
 <circle cx="34" cy="25" r="6.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
 <ellipse cx="25" cy="25" rx="16" ry="6" fill="#4b5563" stroke="rgba(75,85,99,.45)" stroke-width="1.2"/>
 <ellipse cx="20" cy="20" rx="4" ry="2" fill="#9ca3af" opacity=".45"/>
 <path d="M19 28 L21 33 L18 33 L20 38" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
 <path d="M28 27 L30 32 L27 32 L29 37" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
-<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/>
+<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/><path d="M32 32 L34 35.5 L31.5 35.5 L33.5 39.5" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8"/><path d="M14 30 L15.5 34 L13 34 L14.5 38" stroke="#a0aec0" stroke-width="1.1" stroke-linecap="round" fill="none" opacity=".6"/>
 <path d="M12 18 Q14 15 16 18" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/>
 <path d="M30 14 Q32 11 34 14" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/></svg>`,
 
 27:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43" rx="12" ry="3" fill="rgba(180,140,60,.15)"/>
 <ellipse cx="24" cy="14" rx="6" ry="2.8" fill="#fff8e0" opacity=".6"/>
-<circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
+<circle cx="24" cy="23" r="14" fill="#fff8e0" opacity=".55"/><circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
 <circle cx="24" cy="23" r="7.5" fill="#fff8e8"/>
 <circle cx="21.2" cy="21.5" r="1.2" fill="#7a5a2a"/><circle cx="26.8" cy="21.5" r="1.2" fill="#7a5a2a"/>
 <path d="M21.5 25.5 Q24 28 26.5 25.5" stroke="#c9963a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
@@ -825,24 +825,24 @@ const SPACE_ICONS={
 <path d="M17 34 L24 33 L31 34 L33 42 Q24 44.5 15 42 Z" fill="url(#wgGod)" stroke="rgba(210,170,80,.4)"/>
 <rect x="22.5" y="31" width="3" height="5" rx="1" fill="#fff" opacity=".85"/>
 <line x1="24" y1="28" x2="24" y2="31" stroke="#e8c86a" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M22 9.5 L24 7.5 L26 9.5 M23 9.5 L23 12 M25 9.5 L25 12" stroke="#e8c86a" stroke-width="1" stroke-linecap="round" fill="none"/>
+<ellipse cx="24" cy="6" rx="5.5" ry="1.6" fill="none" stroke="#f0c95c" stroke-width="1.6" opacity=".95"/><path d="M9 10 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" fill="#ffe9a8" opacity=".95"/><path d="M38 12 l0.8 1.9 1.9 0.8 -1.9 0.8 -0.8 1.9 -0.8 -1.9 -1.9 -0.8 1.9 -0.8 Z" fill="#fff3c4" opacity=".9"/>
 <ellipse cx="18.5" cy="18" rx="3" ry="1.6" fill="#fff" opacity=".5" transform="rotate(-25 18.5 18)"/></svg>`,
 
 28:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43.5" rx="13" ry="3" fill="rgba(50,55,65,.18)"/>
 <circle cx="17" cy="24" r="7.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
-<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
+<circle cx="27" cy="19.5" r="9.5" fill="url(#wgStorm)" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/><circle cx="30.5" cy="17" r="5" fill="#4b5563" opacity=".45"/>
 <circle cx="34" cy="25" r="6.5" fill="#6b7280" stroke="rgba(75,85,99,.5)" stroke-width="1.5"/>
 <ellipse cx="25" cy="25" rx="16" ry="6" fill="#4b5563" stroke="rgba(75,85,99,.45)" stroke-width="1.2"/>
 <ellipse cx="20" cy="20" rx="4" ry="2" fill="#9ca3af" opacity=".45"/>
 <path d="M19 28 L21 33 L18 33 L20 38" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
 <path d="M28 27 L30 32 L27 32 L29 37" stroke="#a0aec0" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
-<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/>
+<path d="M22 31 L25 28 L23 34 L27 31" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85"/><path d="M32 32 L34 35.5 L31.5 35.5 L33.5 39.5" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8"/><path d="M14 30 L15.5 34 L13 34 L14.5 38" stroke="#a0aec0" stroke-width="1.1" stroke-linecap="round" fill="none" opacity=".6"/>
 <path d="M12 18 Q14 15 16 18" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/>
 <path d="M30 14 Q32 11 34 14" stroke="#9ca3af" stroke-width="1" fill="none" opacity=".4"/></svg>`,
 
 29:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="43" rx="12" ry="3" fill="rgba(180,140,60,.15)"/>
 <ellipse cx="24" cy="14" rx="6" ry="2.8" fill="#fff8e0" opacity=".6"/>
-<circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
+<circle cx="24" cy="23" r="14" fill="#fff8e0" opacity=".55"/><circle cx="24" cy="23" r="11" fill="url(#wgGod)" stroke="rgba(210,170,80,.45)" stroke-width="1.8"/>
 <circle cx="24" cy="23" r="7.5" fill="#fff8e8"/>
 <circle cx="21.2" cy="21.5" r="1.2" fill="#7a5a2a"/><circle cx="26.8" cy="21.5" r="1.2" fill="#7a5a2a"/>
 <path d="M21.5 25.5 Q24 28 26.5 25.5" stroke="#c9963a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
@@ -850,7 +850,7 @@ const SPACE_ICONS={
 <path d="M17 34 L24 33 L31 34 L33 42 Q24 44.5 15 42 Z" fill="url(#wgGod)" stroke="rgba(210,170,80,.4)"/>
 <rect x="22.5" y="31" width="3" height="5" rx="1" fill="#fff" opacity=".85"/>
 <line x1="24" y1="28" x2="24" y2="31" stroke="#e8c86a" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M22 9.5 L24 7.5 L26 9.5 M23 9.5 L23 12 M25 9.5 L25 12" stroke="#e8c86a" stroke-width="1" stroke-linecap="round" fill="none"/>
+<ellipse cx="24" cy="6" rx="5.5" ry="1.6" fill="none" stroke="#f0c95c" stroke-width="1.6" opacity=".95"/><path d="M9 10 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" fill="#ffe9a8" opacity=".95"/><path d="M38 12 l0.8 1.9 1.9 0.8 -1.9 0.8 -0.8 1.9 -0.8 -1.9 -1.9 -0.8 1.9 -0.8 Z" fill="#fff3c4" opacity=".9"/>
 <ellipse cx="18.5" cy="18" rx="3" ry="1.6" fill="#fff" opacity=".5" transform="rotate(-25 18.5 18)"/></svg>`
 
 };
@@ -861,6 +861,8 @@ const ICON_START=`<svg viewBox="0 0 48 48">
 <path d="M15 14 C17.5 11.5 21 10.8 23.5 12.2" stroke="#fff" stroke-width="3.2" stroke-linecap="round" fill="none" opacity=".85"/>
 <circle cx="34.5" cy="12.5" r="1.6" fill="#fff" opacity=".9"/>
 <circle cx="38" cy="17" r="1.1" fill="#fff" opacity=".7"/>
+<path d="M5 6 l1.1 2.6 2.6 1.1 -2.6 1.1 -1.1 2.6 -1.1 -2.6 -2.6 -1.1 2.6 -1.1 Z" fill="#fff" opacity=".95"/>
+<path d="M41 38 l0.9 2.1 2.1 0.9 -2.1 0.9 -0.9 2.1 -0.9 -2.1 -2.1 -0.9 2.1 -0.9 Z" fill="#ffd0e4" opacity=".9"/>
 </svg>`;
 
 const ICON_GOAL=`<svg viewBox="0 0 48 48">
@@ -869,6 +871,8 @@ const ICON_GOAL=`<svg viewBox="0 0 48 48">
 <path d="${ICON_HEART}" fill="url(#wgRose)" stroke="rgba(190,40,105,.5)" stroke-width="2"/>
 <path d="M15 14 C17.5 11.5 21 10.8 23.5 12.2" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".85"/>
 <path d="M8 6 l1.2 2.8 2.8 1.2 -2.8 1.2 -1.2 2.8 -1.2 -2.8 -2.8 -1.2 2.8 -1.2 Z" fill="#fff" opacity=".95"/>
+<path d="M6 14 l1 2.4 2.4 1 -2.4 1 -1 2.4 -1 -2.4 -2.4 -1 2.4 -1 Z" fill="#ffe9a8" opacity=".95"/>
+<circle cx="40" cy="30" r="1.3" fill="#fff" opacity=".8"/>
 </svg>`;
 
 function buildBoard(){

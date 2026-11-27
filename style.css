@@ -1183,7 +1183,7 @@ justify-content:center;
 
 align-items:center;
 
-gap:3px;
+gap:6px;
 
 pointer-events:none;
 
@@ -1191,9 +1191,9 @@ pointer-events:none;
 
 .space-num{
 
-font-size:16px;
+font-size:20px;
 
-line-height:21px;
+line-height:25px;
 
 font-weight:900;
 
@@ -1205,21 +1205,27 @@ border:1px solid #f2cfe0;
 
 border-radius:999px;
 
-padding:0 10px;
+padding:0 13px;
 
-min-width:24px;
+min-width:30px;
 
 text-align:center;
+
+box-shadow:0 1px 4px rgba(150,80,110,.18);
 
 }
 
 .space-icon{
 
-width:44px;
+width:68px;
 
-height:44px;
+height:68px;
 
-margin-top:4px;
+margin-top:0;
+
+box-sizing:border-box;
+
+padding:5px;
 
 display:flex;
 
@@ -1227,7 +1233,15 @@ align-items:center;
 
 justify-content:center;
 
-filter:drop-shadow(0 3px 2px rgba(150,80,110,.22));
+background:radial-gradient(circle at 50% 32%,#ffffff,#ffeef5);
+
+border:1.5px solid rgba(255,255,255,.95);
+
+border-radius:50%;
+
+box-shadow:inset 0 2px 4px rgba(255,255,255,.95), inset 0 -3px 6px rgba(216,78,134,.08), 0 3px 8px rgba(150,80,110,.22);
+
+filter:drop-shadow(0 4px 3px rgba(150,80,110,.28));
 
 }
 
@@ -1243,11 +1257,11 @@ display:block;
 
 .space-name{
 
-font-size:13px;
+font-size:18px;
 
-line-height:1.15;
+line-height:1.25;
 
-font-weight:700;
+font-weight:800;
 
 color:#97657f;
 
@@ -1255,23 +1269,29 @@ text-align:center;
 
 background:rgba(255,255,255,.78);
 
-border-radius:8px;
+border-radius:10px;
 
-padding:2px 6px;
+padding:4px 11px;
 
-max-width:150px;
+max-width:175px;
 
 word-break:break-word;
 
 white-space:normal;
 
+box-shadow:0 1px 4px rgba(150,80,110,.15);
+
 }
 
 .space-big{
 
-width:72px;
+width:84px;
 
-height:72px;
+height:84px;
+
+box-sizing:border-box;
+
+padding:6px;
 
 display:flex;
 
@@ -1279,7 +1299,15 @@ align-items:center;
 
 justify-content:center;
 
-filter:drop-shadow(0 4px 3px rgba(170,60,110,.3));
+background:radial-gradient(circle at 50% 32%,#ffffff,#ffe3ef);
+
+border:1.5px solid rgba(255,255,255,.95);
+
+border-radius:50%;
+
+box-shadow:inset 0 2px 5px rgba(255,255,255,.95), inset 0 -3px 6px rgba(216,78,134,.10), 0 4px 10px rgba(170,60,110,.28);
+
+filter:drop-shadow(0 5px 4px rgba(170,60,110,.32));
 
 }
 
@@ -1291,6 +1319,24 @@ height:100%;
 
 display:block;
 
+}
+
+/* 圖示底座依格子類型染色：遇見神金底、婚姻試煉灰藍底 */
+.space.god .space-icon{
+background:radial-gradient(circle at 50% 32%,#fffdf4,#ffedb8);
+border-color:rgba(210,170,80,.6);
+box-shadow:
+inset 0 2px 4px rgba(255,255,255,.95),
+inset 0 -3px 6px rgba(210,170,80,.18),
+0 3px 8px rgba(150,110,40,.25);
+}
+.space.trial .space-icon{
+background:radial-gradient(circle at 50% 32%,#f4f6fa,#dbe2ec);
+border-color:rgba(100,116,139,.5);
+box-shadow:
+inset 0 2px 4px rgba(255,255,255,.95),
+inset 0 -3px 6px rgba(71,85,105,.15),
+0 3px 8px rgba(71,85,105,.25);
 }
 
 .space.start,.space.goal{
@@ -1311,7 +1357,7 @@ inset 0 3px 6px rgba(255,255,255,.5),
 
 .space.start .space-name,.space.goal .space-name{
 
-font-size:22px;
+font-size:25px;
 
 font-weight:900;
 
@@ -1321,7 +1367,7 @@ background:rgba(255,255,255,.18);
 
 text-shadow:0 2px 3px rgba(178,32,100,.55);
 
-padding:3px 14px;
+padding:4px 16px;
 
 }
 
