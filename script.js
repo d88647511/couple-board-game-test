@@ -1187,9 +1187,9 @@ const winnerSound = new Audio("winner.mp3");
 
 winnerSound.volume = 1.0;
 
-// 暫代音效：assets/audio/god-event.mp3 不存在（404），先以 heart.mp3 暫代；
-// 待 Peng 提供真實 god/trial 音檔後改回 assets/audio/ 路徑。
-const godEventSound = new Audio("heart.mp3");
+// 遇見神音效：神聖鐘聲琶音（god-sound-data.js，base64 data URI 內嵌；
+// 原始 MP3 母檔在 ~/workspace/god-event.mp3）
+const godEventSound = new Audio(GOD_EVENT_SOUND_DATA_URI);
 godEventSound.volume = 0.6;
 
 // 暫代音效：assets/audio/trial-event.mp3 不存在（404），先以 end.mp3 暫代；
