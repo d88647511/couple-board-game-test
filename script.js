@@ -353,9 +353,8 @@ function tileShape(i){
     if(i===30) return {cls:"shape-love", len:240, wid:240};
     const h=(i*2654435761)%100;
     const j=v=>((v%5)-2)*2; // ±4 的尺寸抖動
-    if(h<30) return {cls:"shape-oval", len:190+j(h), wid:160+j(h+1)};
-    if(h<55) return {cls:"shape-pebble", len:185+j(h), wid:175+j(h+1)};
-    if(h<80) return {cls:"shape-slab", len:195+j(h), wid:168+j(h+1)};
+    if(h<33) return {cls:"shape-oval", len:190+j(h), wid:160+j(h+1)};
+    if(h<66) return {cls:"shape-pebble", len:185+j(h), wid:175+j(h+1)};
     return {cls:"shape-round", len:185+j(h), wid:185+j(h+1)};
 }
 
