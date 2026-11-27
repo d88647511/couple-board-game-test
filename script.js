@@ -1187,6 +1187,22 @@ heartSound.volume = 0.8;
 const diceSound = new Audio("dice.mp3");
 
 diceSound.volume = 0.8;
+// 預載骰子音效：頁面一開就開始載，否則第一次擲骰要等音檔下載，骰子先轉、聲音才出。
+diceSound.preload = "auto";
+diceSound.load();
+
+// 預熱音效：第一次點按頁面時以靜音播一次，把音檔解碼好，之後擲骰才會立刻出聲。
+window.addEventListener("pointerdown", function warmUpDiceSound(){
+    const v=diceSound.volume;
+    diceSound.volume=0;
+    const p=diceSound.play();
+    if(p && p.then){
+        p.then(()=>{ diceSound.pause(); diceSound.currentTime=0; diceSound.volume=v; })
+         .catch(()=>{ diceSound.volume=v; });
+    } else {
+        diceSound.volume=v;
+    }
+}, {once:true});
 
 const winnerSound = new Audio("winner.mp3");
 
