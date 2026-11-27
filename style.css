@@ -1515,229 +1515,17 @@ transform-style:preserve-3d;
     height:88px;
 }
 
+.piece-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
 .piece * {
     pointer-events: none;
 }
 
-.piece .chibi-head {
-    position: absolute;
-    top: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #ffe9c9, #ffcf9e 70%, #f7b878);
-    border: 2px solid rgba(0,0,0,.12);
-    box-shadow:
-        inset 0 -3px 5px rgba(0,0,0,.08),
-        inset 0 3px 5px rgba(255,255,255,.4);
-    z-index: 2;
-}
-
-.piece .chibi-hair {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 44px;
-    height: 26px;
-    border-radius: 50% 50% 42% 42% / 62% 62% 38% 38%;
-    z-index: 3;
-}
-
-.piece .chibi-hair::after {
-    content: "";
-    position: absolute;
-    top: -6px;
-    left: 55%;
-    width: 7px;
-    height: 11px;
-    background: inherit;
-    border-radius: 50%;
-    transform: rotate(18deg);
-}
-
-.piece .chibi-face {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 4;
-}
-
-.piece .chibi-eye {
-    position: absolute;
-    width: 7px;
-    height: 9px;
-    background: #2d2d2d;
-    border-radius: 50%;
-    top: 15px;
-    animation: blink 4s infinite;
-}
-
-.piece .chibi-eye::after {
-    content: "";
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    width: 2px;
-    height: 2px;
-    background: #fff;
-    border-radius: 50%;
-}
-
-.piece .chibi-eye.left { left: 9px; }
-.piece .chibi-eye.right { right: 9px; }
-
-.piece .chibi-cheek {
-    position: absolute;
-    width: 8px;
-    height: 5px;
-    background: rgba(255,110,110,.55);
-    border-radius: 50%;
-    bottom: 7px;
-}
-
-.piece .chibi-cheek.left { left: 4px; }
-.piece .chibi-cheek.right { right: 4px; }
-
-.piece .chibi-mouth {
-    position: absolute;
-    bottom: 7px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 9px;
-    height: 3px;
-    border-bottom: 2px solid #2d2d2d;
-    border-radius: 0 0 5px 5px;
-}
-
-.piece .chibi-body {
-    position: absolute;
-    top: 44px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 36px;
-    height: 30px;
-    border-radius: 16px 16px 10px 10px;
-    border: 2px solid rgba(0,0,0,.12);
-    box-shadow:
-        inset 0 -3px 5px rgba(0,0,0,.1),
-        inset 0 3px 5px rgba(255,255,255,.25);
-    z-index: 1;
-}
-
-.piece .chibi-collar {
-    position: absolute;
-    top: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 8px;
-    background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 0 0 10px 10px;
-}
-
-.piece .chibi-heart {
-    position: absolute;
-    top: 11px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255,255,255,.95);
-    font-size: 12px;
-    line-height: 1;
-    text-shadow: 0 1px 2px rgba(0,0,0,.25);
-}
-
-.piece .chibi-arm {
-    position: absolute;
-    top: 48px;
-    width: 10px;
-    height: 22px;
-    border-radius: 5px;
-    transform-origin: top center;
-    z-index: 0;
-}
-
-.piece .chibi-arm::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 1px;
-    width: 8px;
-    height: 8px;
-    background: linear-gradient(145deg, #ffe9c9, #ffcf9e);
-    border-radius: 50%;
-    border: 1px solid rgba(0,0,0,.1);
-}
-
-.piece .chibi-arm.left {
-    left: 6px;
-    transform: rotate(-12deg);
-}
-
-.piece .chibi-arm.right {
-    right: 6px;
-    transform: rotate(12deg);
-}
-
-.piece .chibi-leg {
-    position: absolute;
-    bottom: 4px;
-    width: 11px;
-    height: 16px;
-    background: linear-gradient(145deg, #4a4f6d, #2e3247);
-    border-radius: 5px 5px 3px 3px;
-    transform-origin: top center;
-    z-index: 0;
-}
-
-.piece .chibi-leg::after {
-    content: "";
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 11px;
-    height: 7px;
-    background: #6b4226;
-    border-radius: 3px 3px 4px 4px;
-}
-
-.piece .chibi-leg.left {
-    left: 14px;
-}
-
-.piece .chibi-leg.right {
-    right: 14px;
-}
-
-.red .chibi-hair { background: linear-gradient(145deg, #e05252, #a82525); }
-.red .chibi-body { background: linear-gradient(145deg, #ff7a7a, #e54848 70%, #c93333); }
-.red .chibi-arm { background: linear-gradient(145deg, #ff7a7a, #e54848); }
-
-.blue .chibi-hair { background: linear-gradient(145deg, #2f7fd0, #174e8f); }
-.blue .chibi-body { background: linear-gradient(145deg, #5db0ff, #2f7fd0 70%, #1a5fb4); }
-.blue .chibi-arm { background: linear-gradient(145deg, #5db0ff, #2f7fd0); }
-
-.green .chibi-hair { background: linear-gradient(145deg, #3fb53f, #1f7a1f); }
-.green .chibi-body { background: linear-gradient(145deg, #66dd66, #3fb53f 70%, #2a992a); }
-.green .chibi-arm { background: linear-gradient(145deg, #66dd66, #3fb53f); }
-
-.yellow .chibi-hair { background: linear-gradient(145deg, #d9a400, #a67c00); }
-.yellow .chibi-body { background: linear-gradient(145deg, #ffe966, #f2c200 70%, #d9a400); }
-.yellow .chibi-arm { background: linear-gradient(145deg, #ffe966, #f2c200); }
-
-.purple .chibi-hair { background: linear-gradient(145deg, #a55ed6, #6e2a96); }
-.purple .chibi-body { background: linear-gradient(145deg, #dd8fff, #b45ee0 70%, #8a3ab0); }
-.purple .chibi-arm { background: linear-gradient(145deg, #dd8fff, #b45ee0); }
-
-@keyframes blink {
-    0%, 45%, 55%, 100% { height: 9px; }
-    50% { height: 1px; }
-}
 
 @keyframes bounce {
     0% { transform: translateY(0) rotateX(-45deg) scale(1); }
@@ -1752,35 +1540,15 @@ transform-style:preserve-3d;
 
 /* 走路：左右腿交替擺動、手臂反向擺動、身體上下起伏
    一步約 430ms，一個完整步態（左右各一步）約 860ms */
-@keyframes legSwingL {
-    0%, 100% { transform: rotate(28deg); }
-    50% { transform: rotate(-28deg); }
-}
 
-@keyframes legSwingR {
-    0%, 100% { transform: rotate(-28deg); }
-    50% { transform: rotate(28deg); }
-}
 
-@keyframes armSwingL {
-    0%, 100% { transform: rotate(-24deg); }
-    50% { transform: rotate(20deg); }
-}
 
-@keyframes armSwingR {
-    0%, 100% { transform: rotate(20deg); }
-    50% { transform: rotate(-24deg); }
-}
 
 @keyframes walkBob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
+    0%, 100% { transform: translateY(0) rotate(2deg); }
+    50% { transform: translateY(-3px) rotate(-2deg); }
 }
 
-.piece.walking .chibi-leg.left { animation: legSwingL .86s ease-in-out infinite; }
-.piece.walking .chibi-leg.right { animation: legSwingR .86s ease-in-out infinite; }
-.piece.walking .chibi-arm.left { animation: armSwingL .86s ease-in-out infinite; }
-.piece.walking .chibi-arm.right { animation: armSwingR .86s ease-in-out infinite; }
 .piece.walking .piece-doll { animation: walkBob .43s ease-in-out infinite; }
 
 /* =========================
@@ -3261,104 +3029,3 @@ background-size:cover;
 background-position:center 20%;
 box-shadow:0 0 12px rgba(255,215,110,.5),0 4px 10px rgba(0,0,0,.3);
 }
-#bigRollBtn{
-position:absolute;
-right:24px;
-bottom:24px;
-z-index:60;
-width:108px;
-height:108px;
-border-radius:50%;
-border:3px solid #ffd76e;
-background:radial-gradient(circle at 50% 30%,rgba(38,64,110,.92),rgba(16,32,64,.94));
-box-shadow:0 0 0 4px rgba(255,215,110,.35),0 0 28px rgba(255,200,60,.45),0 10px 24px rgba(0,0,0,.35);
-cursor:pointer;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-gap:2px;
-transition:transform .2s;
-animation:bigDicePulse 2.6s ease-in-out infinite;
-}
-#bigRollBtn:hover{transform:scale(1.06);}
-#bigRollBtn:active{transform:scale(.96);}
-#bigRollBtn.rolling{opacity:.55;pointer-events:none;animation:none;}
-#bigDiceFace{
-font-size:46px;
-font-weight:900;
-color:#fff;
-line-height:1;
-text-shadow:0 3px 6px rgba(0,0,0,.4);
-}
-.big-roll-label{
-font-size:15px;
-font-weight:800;
-color:#ffd76e;
-letter-spacing:2px;
-}
-@keyframes bigDicePulse{
-0%,100%{box-shadow:0 0 0 4px rgba(255,215,110,.35),0 0 22px rgba(255,200,60,.35),0 10px 24px rgba(0,0,0,.35);}
-50%{box-shadow:0 0 0 6px rgba(255,215,110,.5),0 0 36px rgba(255,200,60,.6),0 10px 24px rgba(0,0,0,.35);}
-}
-#teamCards{
-position:absolute;
-left:20px;
-bottom:20px;
-z-index:60;
-display:flex;
-flex-direction:column;
-gap:8px;
-pointer-events:none;
-}
-.teamCard{
-display:flex;
-align-items:center;
-gap:10px;
-min-width:210px;
-padding:8px 12px;
-border-radius:14px;
-background:rgba(12,28,58,.72);
-backdrop-filter:blur(8px);
-border:1.5px solid rgba(255,255,255,.25);
-box-shadow:0 8px 18px rgba(0,0,0,.25);
-color:#fff;
-}
-.teamCard.current{
-border-color:#ffd76e;
-box-shadow:0 0 0 2px rgba(255,215,110,.55),0 8px 18px rgba(0,0,0,.3);
-}
-.teamCard .dot{
-width:16px;
-height:16px;
-border-radius:50%;
-flex-shrink:0;
-box-shadow:0 0 0 2px rgba(255,255,255,.35);
-}
-.teamCard .tc-main{flex:1;min-width:0;}
-.teamCard .tc-name{
-font-size:15px;
-font-weight:800;
-line-height:1.2;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-.teamCard .tc-bar{
-height:6px;
-border-radius:3px;
-background:rgba(255,255,255,.25);
-margin-top:5px;
-overflow:hidden;
-}
-.teamCard .tc-fill{
-height:100%;
-border-radius:3px;
-background:linear-gradient(90deg,#ffd76e,#ff9ec6);
-}
-.teamCard .tc-score{
-font-size:15px;
-font-weight:900;
-color:#ffd76e;
-}
-.teamCard .tc-star{font-size:15px;}
